@@ -14,7 +14,7 @@ emSzmal Banking API wrapper in PHP
 Via Composer
 
 ``` bash
-$ composer require KDuma/emSzmalAPI
+$ composer require kduma/emszmal-api
 ```
 
 ## Usage

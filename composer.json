@@ -1,5 +1,5 @@
 {
-    "name": "KDuma/emSzmalAPI",
+    "name": "kduma/emszmal-api",
     "type": "library",
     "description": "emSzmal Banking API wrapper in PHP",
     "keywords": [
