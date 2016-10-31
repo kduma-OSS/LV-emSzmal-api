@@ -2,10 +2,9 @@
 
 [![Latest Version on Packagist][ico-version]][link-packagist]
 [![Software License][ico-license]](LICENSE.md)
-[![Build Status][ico-travis]][link-travis]
-[![Coverage Status][ico-scrutinizer]][link-scrutinizer]
-[![Quality Score][ico-code-quality]][link-code-quality]
 [![Total Downloads][ico-downloads]][link-downloads]
+[![StyleCI](https://styleci.io/repos/72450991/shield?branch=master)](https://styleci.io/repos/72450991)
+[![SensioLabsInsight](https://insight.sensiolabs.com/projects/97e54d0d-ad26-41d7-9956-843893a5d897/mini.png)](https://insight.sensiolabs.com/projects/97e54d0d-ad26-41d7-9956-843893a5d897)
 
 emSzmal Banking API wrapper in PHP
 
@@ -113,14 +112,8 @@ The MIT License (MIT). Please see [License File](LICENSE.md) for more informatio
 
 [ico-version]: https://img.shields.io/packagist/v/kduma/emszmal-api.svg?style=flat-square
 [ico-license]: https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square
-[ico-travis]: https://img.shields.io/travis/kduma/emszmal-api/master.svg?style=flat-square
-[ico-scrutinizer]: https://img.shields.io/scrutinizer/coverage/g/kduma/emszmal-api.svg?style=flat-square
-[ico-code-quality]: https://img.shields.io/scrutinizer/g/kduma/emszmal-api.svg?style=flat-square
 [ico-downloads]: https://img.shields.io/packagist/dt/kduma/emszmal-api.svg?style=flat-square
 
 [link-packagist]: https://packagist.org/packages/kduma/emszmal-api
-[link-travis]: https://travis-ci.org/kduma/emszmal-api
-[link-scrutinizer]: https://scrutinizer-ci.com/g/kduma/emszmal-api/code-structure
-[link-code-quality]: https://scrutinizer-ci.com/g/kduma/emszmal-api
 [link-downloads]: https://packagist.org/packages/kduma/emszmal-api
 [link-author]: https://github.com/kduma
