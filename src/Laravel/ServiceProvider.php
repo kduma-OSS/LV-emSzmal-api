@@ -1,4 +1,6 @@
-<?php namespace KDuma\emSzmalAPI\Laravel;
+<?php
+
+namespace KDuma\emSzmalAPI\Laravel;
 
 use Exception;
 use Illuminate\Contracts\Foundation\Application;
@@ -8,8 +10,13 @@ use KDuma\emSzmalAPI\CacheProviders\CacheProviderInterface;
 use KDuma\emSzmalAPI\CacheProviders\LaravelCacheProvider;
 use KDuma\emSzmalAPI\emSzmalAPI;
 
-class ServiceProvider extends LaravelServiceProvider {
-
+/**
+ * Class ServiceProvider
+ *
+ * @package KDuma\emSzmalAPI\Laravel
+ */
+class ServiceProvider extends LaravelServiceProvider
+{
     /**
      * Indicates if loading of the provider is deferred.
      *
@@ -22,8 +29,8 @@ class ServiceProvider extends LaravelServiceProvider {
      *
      * @return void
      */
-    public function boot() {
-
+    public function boot()
+    {
         $this->handleConfigs();
     }
 
@@ -32,7 +39,8 @@ class ServiceProvider extends LaravelServiceProvider {
      *
      * @return void
      */
-    public function register() {
+    public function register()
+    {
         $this->app->singleton(CacheProviderInterface::class, function (Application $app) {
             return new LaravelCacheProvider(config('emszmalapi.cache.remember_for'));
         });
@@ -40,9 +48,10 @@ class ServiceProvider extends LaravelServiceProvider {
         $this->app->singleton(emSzmalAPI::class, function (Application $app) {
             $api = new emSzmalAPI(config('emszmalapi.license.api_id'), config('emszmalapi.license.api_key'));
             $api->setCacheProvider($app->make(CacheProviderInterface::class));
-            $api->setDefaultBankCredentialsResolver(function($identifier = 'default') {
-                if(!config('emszmalapi.bank_credentials.'.$identifier))
+            $api->setDefaultBankCredentialsResolver(function ($identifier = 'default') {
+                if (! config('emszmalapi.bank_credentials.'.$identifier)) {
                     throw new Exception('There is no credentials with id '.$identifier.'!');
+                }
 
                 return new BankCredentials(
                     config('emszmalapi.bank_credentials.'.$identifier.'.provider'),
@@ -61,18 +70,17 @@ class ServiceProvider extends LaravelServiceProvider {
      *
      * @return array
      */
-    public function provides() {
-
+    public function provides()
+    {
         return [CacheProviderInterface::class, emSzmalAPI::class];
     }
 
-    private function handleConfigs() {
-
-        $configPath = __DIR__ . '/../../config/emszmalapi.php';
+    private function handleConfigs()
+    {
+        $configPath = __DIR__.'/../../config/emszmalapi.php';
 
         $this->publishes([$configPath => config_path('emszmalapi.php')]);
 
         $this->mergeConfigFrom($configPath, 'emszmalapi');
     }
-
 }

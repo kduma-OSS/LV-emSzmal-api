@@ -1,11 +1,14 @@
 <?php
 
-
 namespace KDuma\emSzmalAPI\CacheProviders;
-
 
 use Cache;
 
+/**
+ * Class LaravelCacheProvider
+ *
+ * @package KDuma\emSzmalAPI\CacheProviders
+ */
 class LaravelCacheProvider implements CacheProviderInterface
 {
     /**
@@ -18,11 +21,10 @@ class LaravelCacheProvider implements CacheProviderInterface
      *
      * @param int|null $remember_for
      */
-    public function __construct ($remember_for = 60)
+    public function __construct($remember_for = 60)
     {
         $this->remember_for = $remember_for;
     }
-
 
     /**
      * @param string   $key
@@ -30,11 +32,12 @@ class LaravelCacheProvider implements CacheProviderInterface
      *
      * @return mixed
      */
-    public function cache ($key, callable $callable)
+    public function cache($key, callable $callable)
     {
-        if($this->remember_for)
+        if ($this->remember_for) {
             return Cache::remember($key, $this->remember_for, $callable);
-        else
+        } else {
             return Cache::rememberForever($key, $callable);
+        }
     }
 }
