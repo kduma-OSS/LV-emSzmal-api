@@ -3,9 +3,7 @@
 namespace KDuma\emSzmalAPI;
 
 /**
- * Class BankCredentials
- *
- * @package KDuma\emSzmalAPI
+ * Class BankCredentials.
  */
 class BankCredentials
 {
