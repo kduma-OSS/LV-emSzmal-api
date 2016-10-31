@@ -3,15 +3,15 @@
 namespace KDuma\emSzmalAPI\CacheProviders;
 
 /**
-     * Interface CacheProviderInterface.
+ * Interface CacheProviderInterface.
+ */
+interface CacheProviderInterface
+{
+    /**
+     * @param string   $key
+     * @param callable $callable
+     *
+     * @return mixed
      */
-    interface CacheProviderInterface
-    {
-        /**
-         * @param string   $key
-         * @param callable $callable
-         *
-         * @return mixed
-         */
-        public function cache($key, callable $callable);
-    }
+    public function cache($key, callable $callable);
+}

@@ -2,6 +2,11 @@
 
 namespace KDuma\emSzmalAPI;
 
+/**
+ * Class Bank
+ *
+ * @package KDuma\emSzmalAPI
+ */
 class Bank
 {
     const mBankAltamira = 2;

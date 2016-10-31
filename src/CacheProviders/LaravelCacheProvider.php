@@ -4,6 +4,11 @@ namespace KDuma\emSzmalAPI\CacheProviders;
 
 use Cache;
 
+/**
+ * Class LaravelCacheProvider
+ *
+ * @package KDuma\emSzmalAPI\CacheProviders
+ */
 class LaravelCacheProvider implements CacheProviderInterface
 {
     /**

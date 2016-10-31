@@ -10,6 +10,11 @@ use KDuma\emSzmalAPI\CacheProviders\CacheProviderInterface;
 use KDuma\emSzmalAPI\CacheProviders\LaravelCacheProvider;
 use KDuma\emSzmalAPI\emSzmalAPI;
 
+/**
+ * Class ServiceProvider
+ *
+ * @package KDuma\emSzmalAPI\Laravel
+ */
 class ServiceProvider extends LaravelServiceProvider
 {
     /**

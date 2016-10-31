@@ -2,11 +2,31 @@
 
 namespace KDuma\emSzmalAPI;
 
+/**
+ * Class BankCredentials
+ *
+ * @package KDuma\emSzmalAPI
+ */
 class BankCredentials
 {
+    /**
+     * @var int
+     */
     protected $provider;
+
+    /**
+     * @var string
+     */
     protected $login;
+
+    /**
+     * @var string
+     */
     protected $password;
+
+    /**
+     * @var string
+     */
     protected $user_context;
 
     /**
