@@ -111,17 +111,16 @@ $bank_2_transactions = $api->GetAccountHistory("account number", '2016-10-25', '
 
 The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
 
-[ico-version]: https://img.shields.io/packagist/v/KDuma/emSzmalAPI.svg?style=flat-square
+[ico-version]: https://img.shields.io/packagist/v/kduma/emszmal-api.svg?style=flat-square
 [ico-license]: https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square
-[ico-travis]: https://img.shields.io/travis/KDuma/emSzmalAPI/master.svg?style=flat-square
-[ico-scrutinizer]: https://img.shields.io/scrutinizer/coverage/g/KDuma/emSzmalAPI.svg?style=flat-square
-[ico-code-quality]: https://img.shields.io/scrutinizer/g/KDuma/emSzmalAPI.svg?style=flat-square
-[ico-downloads]: https://img.shields.io/packagist/dt/KDuma/emSzmalAPI.svg?style=flat-square
+[ico-travis]: https://img.shields.io/travis/kduma/emszmal-api/master.svg?style=flat-square
+[ico-scrutinizer]: https://img.shields.io/scrutinizer/coverage/g/kduma/emszmal-api.svg?style=flat-square
+[ico-code-quality]: https://img.shields.io/scrutinizer/g/kduma/emszmal-api.svg?style=flat-square
+[ico-downloads]: https://img.shields.io/packagist/dt/kduma/emszmal-api.svg?style=flat-square
 
-[link-packagist]: https://packagist.org/packages/KDuma/emSzmalAPI
-[link-travis]: https://travis-ci.org/KDuma/emSzmalAPI
-[link-scrutinizer]: https://scrutinizer-ci.com/g/KDuma/emSzmalAPI/code-structure
-[link-code-quality]: https://scrutinizer-ci.com/g/KDuma/emSzmalAPI
-[link-downloads]: https://packagist.org/packages/KDuma/emSzmalAPI
+[link-packagist]: https://packagist.org/packages/kduma/emszmal-api
+[link-travis]: https://travis-ci.org/kduma/emszmal-api
+[link-scrutinizer]: https://scrutinizer-ci.com/g/kduma/emszmal-api/code-structure
+[link-code-quality]: https://scrutinizer-ci.com/g/kduma/emszmal-api
+[link-downloads]: https://packagist.org/packages/kduma/emszmal-api
 [link-author]: https://github.com/kduma
-[link-contributors]: ../../contributors
