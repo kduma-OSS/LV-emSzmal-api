@@ -1,13 +1,11 @@
 <?php
 
-    namespace KDuma\emSzmalAPI;
-    use DateTime;
+namespace KDuma\emSzmalAPI;
 
+use DateTime;
 
     /**
-     * Class Transaction
-     *
-     * @package KDuma\emSzmalAPI
+     * Class Transaction.
      */
     class Transaction
     {
@@ -49,7 +47,7 @@
         /**
          * @return string
          */
-        public function getReferenceNumber ()
+        public function getReferenceNumber()
         {
             return $this->reference_number;
         }
@@ -57,7 +55,7 @@
         /**
          * @return DateTime
          */
-        public function getOperationDate ()
+        public function getOperationDate()
         {
             return $this->operation_date;
         }
@@ -65,7 +63,7 @@
         /**
          * @return DateTime
          */
-        public function getBookingDate ()
+        public function getBookingDate()
         {
             return $this->booking_date;
         }
@@ -73,7 +71,7 @@
         /**
          * @return float
          */
-        public function getAmount ()
+        public function getAmount()
         {
             return $this->amount;
         }
@@ -81,7 +79,7 @@
         /**
          * @return float
          */
-        public function getBalance ()
+        public function getBalance()
         {
             return $this->balance;
         }
@@ -89,7 +87,7 @@
         /**
          * @return string
          */
-        public function getType ()
+        public function getType()
         {
             return $this->type;
         }
@@ -97,7 +95,7 @@
         /**
          * @return string
          */
-        public function getDescription ()
+        public function getDescription()
         {
             return $this->description;
         }
@@ -107,7 +105,7 @@
          *
          * @return Transaction
          */
-        public function setReferenceNumber ($reference_number)
+        public function setReferenceNumber($reference_number)
         {
             $this->reference_number = $reference_number;
 
@@ -119,7 +117,7 @@
          *
          * @return Transaction
          */
-        public function setOperationDate (DateTime $operation_date)
+        public function setOperationDate(DateTime $operation_date)
         {
             $this->operation_date = $operation_date;
 
@@ -131,7 +129,7 @@
          *
          * @return Transaction
          */
-        public function setBookingDate (DateTime $booking_date)
+        public function setBookingDate(DateTime $booking_date)
         {
             $this->booking_date = $booking_date;
 
@@ -143,7 +141,7 @@
          *
          * @return Transaction
          */
-        public function setAmount ($amount)
+        public function setAmount($amount)
         {
             $this->amount = $amount;
 
@@ -155,7 +153,7 @@
          *
          * @return Transaction
          */
-        public function setBalance ($balance)
+        public function setBalance($balance)
         {
             $this->balance = $balance;
 
@@ -167,7 +165,7 @@
          *
          * @return Transaction
          */
-        public function setType ($type)
+        public function setType($type)
         {
             $this->type = $type;
 
@@ -179,7 +177,7 @@
          *
          * @return Transaction
          */
-        public function setDescription ($description)
+        public function setDescription($description)
         {
             $this->description = $description;
 
@@ -192,12 +190,12 @@
          * @param string   $reference_number
          * @param DateTime $operation_date
          * @param DateTime $booking_date
-         * @param double   $amount
-         * @param double   $balance
+         * @param float   $amount
+         * @param float   $balance
          * @param string   $type
          * @param string   $description
          */
-        public function __construct ($reference_number, DateTime $operation_date, DateTime $booking_date, $amount, $balance, $type, $description)
+        public function __construct($reference_number, DateTime $operation_date, DateTime $booking_date, $amount, $balance, $type, $description)
         {
             $this->reference_number = $reference_number;
             $this->operation_date = $operation_date;

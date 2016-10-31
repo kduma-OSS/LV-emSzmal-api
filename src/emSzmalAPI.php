@@ -6,14 +6,12 @@ use DateTime;
 use Exception;
 use GuzzleHttp\Client;
 use KDuma\emSzmalAPI\CacheProviders\CacheProviderInterface;
-use Log;
 
 /**
- * Class emSzmalAPI
- *
- * @package KDuma\emSzmalAPI
+ * Class emSzmalAPI.
  */
-class emSzmalAPI {
+class emSzmalAPI
+{
     /**
      * @var Client
      */
@@ -50,7 +48,7 @@ class emSzmalAPI {
      * @param string $api_id
      * @param string $api_key
      */
-    public function __construct ($api_id, $api_key)
+    public function __construct($api_id, $api_key)
     {
         $this->api_id = $api_id;
         $this->api_key = $api_key;
@@ -64,7 +62,8 @@ class emSzmalAPI {
     /**
      * emSzmalAPI destructor.
      */
-    public function __destruct(){
+    public function __destruct()
+    {
         $this->SayBye();
     }
 
@@ -73,16 +72,17 @@ class emSzmalAPI {
      */
     public function SayHello()
     {
-        if($this->session_id)
+        if ($this->session_id) {
             return $this->session_id;
+        }
 
         $response = $this->client->post('/api/Common/SayHello', [
             'json' => [
                 'License' => [
                     'APIId' => $this->api_id,
                     'APIKey' => $this->api_key,
-                ]
-            ]
+                ],
+            ],
         ]);
 
         $data = json_decode($response->getBody(), true);
@@ -99,10 +99,11 @@ class emSzmalAPI {
     {
         $credentials = $this->GetCredentials($credentials);
 
-        $cache_key = 'GetAccountsList.' . $credentials->getProvider() . '.' . $credentials->getLogin();
-        $data = $this->cache($cache_key, function() use ($credentials) {
-            if(!$this->session_id)
+        $cache_key = 'GetAccountsList.'.$credentials->getProvider().'.'.$credentials->getLogin();
+        $data = $this->cache($cache_key, function () use ($credentials) {
+            if (! $this->session_id) {
                 $this->SayHello();
+            }
 
             $response = $this->client->post('/api/Accounts/GetAccountsList', [
                 'json' => $credentials->toArray() + [
@@ -110,8 +111,8 @@ class emSzmalAPI {
                     'License' => [
                         'APIId' => $this->api_id,
                         'APIKey' => $this->api_key,
-                    ]
-                ]
+                    ],
+                ],
             ]);
 
             return json_decode($response->getBody(), true);
@@ -143,16 +144,19 @@ class emSzmalAPI {
     {
         $credentials = $this->GetCredentials($credentials);
 
-        if(!$date_since instanceof DateTime)
+        if (! $date_since instanceof DateTime) {
             $date_since = new DateTime($date_since);
+        }
 
-        if(!$date_to instanceof DateTime)
+        if (! $date_to instanceof DateTime) {
             $date_to = new DateTime($date_to);
+        }
 
-        $cache_key = 'GetAccountHistory.' . $credentials->getProvider() . '.' . $credentials->getLogin().'.'.$account_number.'.'.$date_since->format('Y-m-d').'.'.$date_to->format('Y-m-d');
-        $data = $this->cache($cache_key, function() use ($account_number, $date_since, $date_to, $credentials) {
-            if(!$this->session_id)
+        $cache_key = 'GetAccountHistory.'.$credentials->getProvider().'.'.$credentials->getLogin().'.'.$account_number.'.'.$date_since->format('Y-m-d').'.'.$date_to->format('Y-m-d');
+        $data = $this->cache($cache_key, function () use ($account_number, $date_since, $date_to, $credentials) {
+            if (! $this->session_id) {
                 $this->SayHello();
+            }
 
             $response = $this->client->post('/api/Accounts/GetAccountHistory', [
                 'json' => $credentials->toArray() + [
@@ -165,8 +169,8 @@ class emSzmalAPI {
                     'License' => [
                         'APIId' => $this->api_id,
                         'APIKey' => $this->api_key,
-                    ]
-                ]
+                    ],
+                ],
             ]);
 
             return json_decode($response->getBody(), true);
@@ -194,8 +198,9 @@ class emSzmalAPI {
      */
     public function SayBye()
     {
-        if(!$this->session_id)
+        if (! $this->session_id) {
             return false;
+        }
 
         $this->client->post('/api/Common/SayBye', [
             'json' => [
@@ -203,8 +208,8 @@ class emSzmalAPI {
                 'License' => [
                     'APIId' => $this->api_id,
                     'APIKey' => $this->api_key,
-                ]
-            ]
+                ],
+            ],
         ]);
 
         $this->session_id = null;
@@ -218,10 +223,11 @@ class emSzmalAPI {
      *
      * @return array
      */
-    private function cache ($cache_key, callable $callable)
+    private function cache($cache_key, callable $callable)
     {
-        if(!$this->cache_provider)
+        if (! $this->cache_provider) {
             return $callable();
+        }
 
         return $this->cache_provider->cache($cache_key, $callable);
     }
@@ -231,7 +237,7 @@ class emSzmalAPI {
      *
      * @return emSzmalAPI
      */
-    public function setCacheProvider (CacheProviderInterface $cache_provider = null)
+    public function setCacheProvider(CacheProviderInterface $cache_provider = null)
     {
         $this->cache_provider = $cache_provider;
 
@@ -243,7 +249,7 @@ class emSzmalAPI {
      *
      * @return emSzmalAPI
      */
-    public function setDefaultBankCredentialsResolver (callable $default_bank_credentials_resolver = null)
+    public function setDefaultBankCredentialsResolver(callable $default_bank_credentials_resolver = null)
     {
         $this->default_bank_credentials_resolver = $default_bank_credentials_resolver;
 
@@ -256,12 +262,13 @@ class emSzmalAPI {
      * @return BankCredentials
      * @throws Exception
      */
-    protected function GetCredentials ($credentials = null)
+    protected function GetCredentials($credentials = null)
     {
-        if($credentials instanceof BankCredentials)
+        if ($credentials instanceof BankCredentials) {
             return $credentials;
+        }
 
-        if($this->default_bank_credentials_resolver){
+        if ($this->default_bank_credentials_resolver) {
             $resolver = $this->default_bank_credentials_resolver;
 
             return is_null($credentials) ? $resolver() : $resolver($credentials);

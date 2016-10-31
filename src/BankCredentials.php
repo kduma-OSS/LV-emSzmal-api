@@ -1,4 +1,6 @@
-<?php namespace KDuma\emSzmalAPI;
+<?php
+
+namespace KDuma\emSzmalAPI;
 
 class BankCredentials
 {
@@ -15,7 +17,7 @@ class BankCredentials
      * @param string $password
      * @param string $user_context
      */
-    public function __construct ($provider, $login, $password, $user_context = "I")
+    public function __construct($provider, $login, $password, $user_context = 'I')
     {
         $this->provider = (int) $provider;
         $this->login = $login;
@@ -32,7 +34,7 @@ class BankCredentials
             'ProviderId' => $this->provider,
             'Authentication' => [
                 'UserLogin' => $this->login,
-                'UserPassword' => $this->password ,
+                'UserPassword' => $this->password,
                 'UserContext' => $this->user_context,
             ],
         ];
@@ -41,7 +43,7 @@ class BankCredentials
     /**
      * @return int
      */
-    public function getProvider ()
+    public function getProvider()
     {
         return $this->provider;
     }
@@ -49,7 +51,7 @@ class BankCredentials
     /**
      * @return string
      */
-    public function getLogin ()
+    public function getLogin()
     {
         return $this->login;
     }

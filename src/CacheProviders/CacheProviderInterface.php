@@ -1,13 +1,9 @@
 <?php
 
+namespace KDuma\emSzmalAPI\CacheProviders;
 
-    namespace KDuma\emSzmalAPI\CacheProviders;
-
-
-    /**
-     * Interface CacheProviderInterface
-     *
-     * @package KDuma\emSzmalAPI\CacheProviders
+/**
+     * Interface CacheProviderInterface.
      */
     interface CacheProviderInterface
     {
