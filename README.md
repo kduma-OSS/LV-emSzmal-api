@@ -117,3 +117,4 @@ The MIT License (MIT). Please see [License File](LICENSE.md) for more informatio
 [link-packagist]: https://packagist.org/packages/kduma/emszmal-api
 [link-downloads]: https://packagist.org/packages/kduma/emszmal-api
 [link-author]: https://github.com/kduma
+[link-contributors]: ../../contributors
