@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'timeout' => 120,
     'cache' => [
         'remember_for' => 30,
     ],
