@@ -47,7 +47,7 @@ class emSzmalAPI
      *
      * @param string $api_id
      * @param string $api_key
-     * @param integer $timeout
+     * @param int $timeout
      */
     public function __construct($api_id, $api_key, $timeout = 120)
     {
