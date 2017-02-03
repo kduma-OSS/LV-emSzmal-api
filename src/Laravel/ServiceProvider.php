@@ -44,7 +44,7 @@ class ServiceProvider extends LaravelServiceProvider
         });
 
         $this->app->singleton(emSzmalAPI::class, function (Application $app) {
-            $api = new emSzmalAPI(config('emszmalapi.license.api_id'), config('emszmalapi.license.api_key'));
+            $api = new emSzmalAPI(config('emszmalapi.license.api_id'), config('emszmalapi.license.api_key'), config('emszmalapi.timeout', 120));
             $api->setCacheProvider($app->make(CacheProviderInterface::class));
             $api->setDefaultBankCredentialsResolver(function ($identifier = 'default') {
                 if (! config('emszmalapi.bank_credentials.'.$identifier)) {
