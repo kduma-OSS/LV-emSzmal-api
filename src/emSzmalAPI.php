@@ -47,14 +47,15 @@ class emSzmalAPI
      *
      * @param string $api_id
      * @param string $api_key
+     * @param integer $timeout
      */
-    public function __construct($api_id, $api_key)
+    public function __construct($api_id, $api_key, $timeout = 120)
     {
         $this->api_id = $api_id;
         $this->api_key = $api_key;
         $this->client = new Client([
             'base_uri' => 'https://web.emszmal.pl/',
-            'timeout'  => 120.0,
+            'timeout'  => $timeout,
             'cookies' => true,
         ]);
     }
