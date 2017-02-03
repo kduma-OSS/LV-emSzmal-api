@@ -3,12 +3,12 @@
 namespace KDuma\emSzmalAPI\Laravel;
 
 use Exception;
-use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Support\ServiceProvider as LaravelServiceProvider;
-use KDuma\emSzmalAPI\BankCredentials;
-use KDuma\emSzmalAPI\CacheProviders\CacheProviderInterface;
-use KDuma\emSzmalAPI\CacheProviders\LaravelCacheProvider;
 use KDuma\emSzmalAPI\emSzmalAPI;
+use KDuma\emSzmalAPI\BankCredentials;
+use Illuminate\Contracts\Foundation\Application;
+use KDuma\emSzmalAPI\CacheProviders\LaravelCacheProvider;
+use KDuma\emSzmalAPI\CacheProviders\CacheProviderInterface;
+use Illuminate\Support\ServiceProvider as LaravelServiceProvider;
 
 /**
  * Class ServiceProvider.
