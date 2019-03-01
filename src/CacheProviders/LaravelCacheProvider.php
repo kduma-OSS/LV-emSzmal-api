@@ -3,6 +3,7 @@
 namespace KDuma\emSzmalAPI\CacheProviders;
 
 use Cache;
+use Carbon\Carbon;
 
 /**
  * Class LaravelCacheProvider.
@@ -33,7 +34,7 @@ class LaravelCacheProvider implements CacheProviderInterface
     public function cache($key, callable $callable)
     {
         if ($this->remember_for) {
-            return Cache::remember($key, $this->remember_for, $callable);
+            return Cache::remember($key, Carbon::now()->addMinutes($this->remember_for), $callable);
         } else {
             return Cache::rememberForever($key, $callable);
         }
