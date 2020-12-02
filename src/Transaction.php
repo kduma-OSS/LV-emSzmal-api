@@ -45,6 +45,21 @@ class Transaction
     public $reference_number;
 
     /**
+     * @var string
+     */
+    public $partner_name;
+
+    /**
+     * @var string
+     */
+    public $partner_account;
+
+    /**
+     * @var string
+     */
+    public $payment_details;
+
+    /**
      * @return string
      */
     public function getReferenceNumber()
@@ -98,6 +113,30 @@ class Transaction
     public function getDescription()
     {
         return $this->description;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPartnerName()
+    {
+        return $this->partner_name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPartnerAccount()
+    {
+        return $this->partner_account;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPaymentDetails()
+    {
+        return $this->payment_details;
     }
 
     /**
@@ -185,17 +224,56 @@ class Transaction
     }
 
     /**
+     * @param string $partner_name
+     *
+     * @return Transaction
+     */
+    public function setPartnerName($partner_name)
+    {
+        $this->partner_name = $partner_name;
+
+        return $this;
+    }
+
+    /**
+     * @param string $partner_account
+     *
+     * @return Transaction
+     */
+    public function setPartnerAccount($partner_account)
+    {
+        $this->partner_account = $partner_account;
+
+        return $this;
+    }
+
+    /**
+     * @param string $payment_details
+     *
+     * @return Transaction
+     */
+    public function setPaymentDetails($payment_details)
+    {
+        $this->payment_details = $payment_details;
+
+        return $this;
+    }
+
+    /**
      * Transaction constructor.
      *
      * @param string   $reference_number
      * @param DateTime $operation_date
      * @param DateTime $booking_date
-     * @param float   $amount
-     * @param float   $balance
+     * @param float    $amount
+     * @param float    $balance
      * @param string   $type
      * @param string   $description
+     * @param string   $partner_name
+     * @param string   $partner_account
+     * @param string   $payment_details
      */
-    public function __construct($reference_number, DateTime $operation_date, DateTime $booking_date, $amount, $balance, $type, $description)
+    public function __construct($reference_number, DateTime $operation_date, DateTime $booking_date, $amount, $balance, $type, $description, $partner_name, $partner_account, $payment_details)
     {
         $this->reference_number = $reference_number;
         $this->operation_date = $operation_date;
@@ -204,5 +282,8 @@ class Transaction
         $this->balance = $balance;
         $this->type = $type;
         $this->description = $description;
+        $this->partner_name = $partner_name;
+        $this->partner_account = $partner_account;
+        $this->payment_details = $payment_details;
     }
 }

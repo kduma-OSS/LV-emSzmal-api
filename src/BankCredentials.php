@@ -35,12 +35,13 @@ class BankCredentials
      * @param string $password
      * @param string $user_context
      */
-    public function __construct($provider, $login, $password, $user_context = 'I')
+    public function __construct($provider, $login, $password, $user_context = '', $token_value = '')
     {
         $this->provider = (int) $provider;
         $this->login = $login;
         $this->password = $password;
         $this->user_context = $user_context;
+        $this->token_value = $token_value;
     }
 
     /**
@@ -50,10 +51,12 @@ class BankCredentials
     {
         return [
             'ProviderId' => $this->provider,
+            'ProviderConfiguration' => '',
             'Authentication' => [
                 'UserLogin' => $this->login,
                 'UserPassword' => $this->password,
                 'UserContext' => $this->user_context,
+                'TokenValue' => $this->token_value,
             ],
         ];
     }

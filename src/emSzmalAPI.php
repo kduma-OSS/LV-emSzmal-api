@@ -187,7 +187,10 @@ class emSzmalAPI
                 $transaction['TransactionAmount'],
                 $transaction['TransactionBalance'],
                 $transaction['TransactionType'],
-                $transaction['TransactionDescription']
+                $transaction['TransactionDescription'],
+                $transaction['TransactionPartnerName'],
+                $transaction['TransactionPartnerAccountNo'],
+                $transaction['TransactionPaymentDetails']
             );
         }
 
