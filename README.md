@@ -3,8 +3,6 @@
 [![Latest Version on Packagist][ico-version]][link-packagist]
 [![Software License][ico-license]](LICENSE.md)
 [![Total Downloads][ico-downloads]][link-downloads]
-[![StyleCI](https://styleci.io/repos/72450991/shield?branch=master)](https://styleci.io/repos/72450991)
-[![SensioLabsInsight](https://insight.sensiolabs.com/projects/97e54d0d-ad26-41d7-9956-843893a5d897/mini.png)](https://insight.sensiolabs.com/projects/97e54d0d-ad26-41d7-9956-843893a5d897)
 
 emSzmal Banking API wrapper in PHP
 
