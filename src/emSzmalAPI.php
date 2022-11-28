@@ -7,6 +7,7 @@ use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use KDuma\emSzmalAPI\CacheProviders\CacheProviderInterface;
+use KDuma\emSzmalAPI\CacheProviders\NoCacheProvider;
 use KDuma\emSzmalAPI\DTO\Account;
 use KDuma\emSzmalAPI\DTO\BankCredentials;
 use KDuma\emSzmalAPI\DTO\MoneyAmount;
@@ -19,7 +20,6 @@ class emSzmalAPI
 {
     protected readonly Client $client;
     private ?string $session_id;
-    protected ?CacheProviderInterface $cache_provider = null;
 
     /**
      * @var callable|null
@@ -30,6 +30,7 @@ class emSzmalAPI
         public readonly string $api_id,
         public readonly string $api_key,
         public readonly int $timeout = 120,
+        public readonly CacheProviderInterface $cache_provider = new NoCacheProvider(),
     )
     {
         $this->client = new Client([
@@ -202,18 +203,7 @@ class emSzmalAPI
     
     private function cache(string $cache_key, callable $callable): array
     {
-        if (! $this->cache_provider) {
-            return $callable();
-        }
-
         return $this->cache_provider->cache($cache_key, $callable);
-    }
-    
-    public function setCacheProvider(CacheProviderInterface $cache_provider = null): static
-    {
-        $this->cache_provider = $cache_provider;
-
-        return $this;
     }
     
     public function setDefaultBankCredentialsResolver(callable $default_bank_credentials_resolver = null): static
