@@ -23,7 +23,9 @@ class ServiceProvider extends LaravelServiceProvider
     public function register()
     {
         $this->app->singleton(CacheProviderInterface::class, function (Application $app) {
-            return new LaravelCacheProvider(config('emszmalapi.cache.remember_for'));
+            return $app->make(LaravelCacheProvider::class, [
+                'remember_for' => config('emszmalapi.cache.remember_for'),
+            ]);
         });
 
         $this->app->singleton(emSzmalAPI::class, function (Application $app) {
