@@ -28,8 +28,9 @@ class emSzmalAPI
 
     public function __construct(
         public readonly string $api_id,
-        public readonly string $api_key, 
-        int                    $timeout = 120)
+        public readonly string $api_key,
+        public readonly int $timeout = 120,
+    )
     {
         $this->client = new Client([
             'base_uri' => 'https://web.emszmal.pl/',
