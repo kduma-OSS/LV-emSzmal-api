@@ -7,9 +7,10 @@ use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use KDuma\emSzmalAPI\CacheProviders\CacheProviderInterface;
+use KDuma\emSzmalAPI\CacheProviders\NoCacheProvider;
 use KDuma\emSzmalAPI\DTO\Account;
 use KDuma\emSzmalAPI\DTO\BankCredentials;
-use KDuma\emSzmalAPI\DTO\MoneyAmount;
+use KDuma\emSzmalAPI\Values\Money;
 use KDuma\emSzmalAPI\DTO\Transaction;
 
 /**
@@ -19,7 +20,6 @@ class emSzmalAPI
 {
     protected readonly Client $client;
     private ?string $session_id = null;
-    protected ?CacheProviderInterface $cache_provider = null;
 
     /**
      * @var callable|null
@@ -28,8 +28,10 @@ class emSzmalAPI
 
     public function __construct(
         public readonly string $api_id,
-        public readonly string $api_key, 
-        int                    $timeout = 120)
+        public readonly string $api_key,
+        public readonly int $timeout = 120,
+        public readonly CacheProviderInterface $cache_provider = new NoCacheProvider(),
+    )
     {
         $this->client = new Client([
             'base_uri' => 'https://web.emszmal.pl/',
@@ -78,8 +80,8 @@ class emSzmalAPI
         $credentials = $this->GetCredentials($credentials);
 
         $cache_key = 'GetAccountsList.'.$credentials->provider.'.'.$credentials->login;
-        $data = $this->cache($cache_key, function () use ($credentials) {
-            if (! $this->session_id) {
+        $data = $this->cache_provider->cache($cache_key, function () use ($credentials) {
+            if (!$this->session_id) {
                 $this->SayHello();
             }
 
@@ -102,8 +104,8 @@ class emSzmalAPI
             $accounts[] = new Account(
                 $account['AccountNumber'],
                 $account['AccountCurrency'],
-                MoneyAmount::fromFloat($account['AccountAvailableFunds']),
-                MoneyAmount::fromFloat($account['AccountBalance'])
+                Money::fromFloat($account['AccountAvailableFunds']),
+                Money::fromFloat($account['AccountBalance'])
             );
         }
 
@@ -132,8 +134,8 @@ class emSzmalAPI
         }
 
         $cache_key = 'GetAccountHistory.'.$credentials->provider.'.'.$credentials->login.'.'.$account_number.'.'.$date_since->format('Y-m-d').'.'.$date_to->format('Y-m-d');
-        $data = $this->cache($cache_key, function () use ($account_number, $date_since, $date_to, $credentials) {
-            if (! $this->session_id) {
+        $data = $this->cache_provider->cache($cache_key, function () use ($account_number, $date_since, $date_to, $credentials) {
+            if (!$this->session_id) {
                 $this->SayHello();
             }
 
@@ -162,8 +164,8 @@ class emSzmalAPI
                 $transaction['TransactionRefNumber'],
                 new DateTimeImmutable($transaction['TransactionOperationDate']),
                 new DateTimeImmutable($transaction['TransactionBookingDate']),
-                MoneyAmount::fromFloat($transaction['TransactionAmount']),
-                MoneyAmount::fromFloat($transaction['TransactionBalance']),
+                Money::fromFloat($transaction['TransactionAmount']),
+                Money::fromFloat($transaction['TransactionBalance']),
                 $transaction['TransactionType'],
                 $transaction['TransactionDescription'],
                 $transaction['TransactionPartnerName'],
@@ -198,23 +200,7 @@ class emSzmalAPI
 
         return true;
     }
-    
-    private function cache(string $cache_key, callable $callable): array
-    {
-        if (! $this->cache_provider) {
-            return $callable();
-        }
 
-        return $this->cache_provider->cache($cache_key, $callable);
-    }
-    
-    public function setCacheProvider(CacheProviderInterface $cache_provider = null): static
-    {
-        $this->cache_provider = $cache_provider;
-
-        return $this;
-    }
-    
     public function setDefaultBankCredentialsResolver(callable $default_bank_credentials_resolver = null): static
     {
         $this->default_bank_credentials_resolver = $default_bank_credentials_resolver;

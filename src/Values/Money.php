@@ -1,8 +1,8 @@
 <?php
 
-namespace KDuma\emSzmalAPI\DTO;
+namespace KDuma\emSzmalAPI\Values;
 
-class MoneyAmount
+class Money
 {
     public function __construct(
         public readonly int $amount,
