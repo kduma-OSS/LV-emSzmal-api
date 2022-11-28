@@ -3,6 +3,7 @@
 namespace KDuma\emSzmalAPI\DTO;
 
 use DateTimeImmutable;
+use KDuma\emSzmalAPI\Values\Money;
 
 
 class Transaction
@@ -11,8 +12,8 @@ class Transaction
         public readonly string            $reference_number,
         public readonly DateTimeImmutable $operation_date,
         public readonly DateTimeImmutable $booking_date,
-        public readonly MoneyAmount       $amount,
-        public readonly MoneyAmount       $balance,
+        public readonly Money             $amount,
+        public readonly Money             $balance,
         public readonly string            $type,
         public readonly string            $description,
         public readonly string            $partner_name,

@@ -9,7 +9,7 @@ use GuzzleHttp\Exception\GuzzleException;
 use KDuma\emSzmalAPI\CacheProviders\CacheProviderInterface;
 use KDuma\emSzmalAPI\DTO\Account;
 use KDuma\emSzmalAPI\DTO\BankCredentials;
-use KDuma\emSzmalAPI\DTO\MoneyAmount;
+use KDuma\emSzmalAPI\Values\Money;
 use KDuma\emSzmalAPI\DTO\Transaction;
 
 /**
@@ -102,8 +102,8 @@ class emSzmalAPI
             $accounts[] = new Account(
                 $account['AccountNumber'],
                 $account['AccountCurrency'],
-                MoneyAmount::fromFloat($account['AccountAvailableFunds']),
-                MoneyAmount::fromFloat($account['AccountBalance'])
+                Money::fromFloat($account['AccountAvailableFunds']),
+                Money::fromFloat($account['AccountBalance'])
             );
         }
 
@@ -162,8 +162,8 @@ class emSzmalAPI
                 $transaction['TransactionRefNumber'],
                 new DateTimeImmutable($transaction['TransactionOperationDate']),
                 new DateTimeImmutable($transaction['TransactionBookingDate']),
-                MoneyAmount::fromFloat($transaction['TransactionAmount']),
-                MoneyAmount::fromFloat($transaction['TransactionBalance']),
+                Money::fromFloat($transaction['TransactionAmount']),
+                Money::fromFloat($transaction['TransactionBalance']),
                 $transaction['TransactionType'],
                 $transaction['TransactionDescription'],
                 $transaction['TransactionPartnerName'],
