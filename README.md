@@ -16,22 +16,36 @@ $ composer require kduma/emszmal-api
 
 ## Usage
 
-``` php
-$api = new \KDuma\emSzmalAPI\emSzmalAPI($api_id, $api_key);
+```php
+$api = new \KDuma\emSzmalAPI\emSzmalAPI(
+    api_id: $api_id, 
+    api_key: $api_key,
+    timeout: 120
+);
 
-$BankCredentials = new BankCredentials(\KDuma\emSzmalAPI\Enums\Bank::PKOiPKO, "Login", "Password");
+$BankCredentials = new \KDuma\emSzmalAPI\DTO\BankCredentials(
+    provider: \KDuma\emSzmalAPI\Enums\Bank::PKOiPKO, 
+    login: 'Login', 
+    password: 'Password',
+    user_context: '',
+    token_value: ''
+);
 
-$accounts = $api->GetAccountsList($BankCredentials);
-$transactions = $api->GetAccountHistory("account number", '2016-10-25', '2016-10-30', $BankCredentials);
+$accounts = $api->GetAccountsList(
+    credentials: $BankCredentials
+);
+
+$transactions = $api->GetAccountHistory(
+    account_number: "account number", 
+    date_since: '2016-10-25', 
+    date_to: '2016-10-30', 
+    credentials: $BankCredentials
+);
 ```
 
 ## Laravel Usage
 
 ### Setup
-
-Then add the Service Provider to the providers array in `config/app.php`:
-
-    KDuma\emSzmalAPI\Laravel\ServiceProvider::class,
 
 Add following entries to your `.env` file:
 
@@ -41,25 +55,34 @@ Add following entries to your `.env` file:
 	EMSZMAL_BANK_PROVIDER_ID=<provider ID>
 	EMSZMAL_BANK_LOGIN=<login>
 	EMSZMAL_BANK_PASSWORD=<password>
-    EMSZMAL_BANK_USER_TOKEN=<token_from_bank>
+    EMSZMAL_BANK_USER_TOKEN=<token from bank>
     
 ### Usage
 You can resolve `emSzmalAPI::class` class:
-``` php
-use KDuma\emSzmalAPI\emSzmalAPI;
 
-$api = app(emSzmalAPI::class);
+```php
+$api = app(\KDuma\emSzmalAPI\emSzmalAPI::class);
 
 $accounts = $api->GetAccountsList();
-$transactions = $api->GetAccountHistory("account number", '2016-10-25', '2016-10-30');
-```
-or You can use injection container
-``` php
-use KDuma\emSzmalAPI\emSzmalAPI;
 
-Route::get('/api', function (emSzmalAPI $api) {
+$transactions = $api->GetAccountHistory(
+    account_number: 'account number', 
+    date_since: '2016-10-25', 
+    date_to: '2016-10-30'
+);
+```
+
+or You can use injection container
+
+```php
+Route::get('/api', function (\KDuma\emSzmalAPI\emSzmalAPI $api) {
     $accounts = $api->GetAccountsList();
-    $transactions = $api->GetAccountHistory("account number", '2016-10-25', '2016-10-30');
+    
+    $transactions = $api->GetAccountHistory(
+        account_number: 'account number', 
+        date_since: '2016-10-25', 
+        date_to: '2016-10-30'
+    );
 });
 ```
     
@@ -71,7 +94,7 @@ You can use multiple bank credentials. First, run the following command to copy 
 
 In Your `config/emszmalapi.php` file, in `bank_credentials` section add additional credentials:
 
-``` php
+```php
 'bank_credentials' => [
     'bank_1' => [
         'provider' => env('EMSZMAL_BANK_1_PROVIDER_ID'),
@@ -90,16 +113,30 @@ In Your `config/emszmalapi.php` file, in `bank_credentials` section add addition
 ],
 ```
 Now you can use the alias when calling API methods:
-``` php
-use KDuma\emSzmalAPI\emSzmalAPI;
+```php
+$api = app(\KDuma\emSzmalAPI\emSzmalAPI::class);
 
-$api = app(emSzmalAPI::class);
+$bank_1_accounts = $api->GetAccountsList(
+    credentials: 'bank_1'
+);
+$bank_1_transactions = $api->GetAccountHistory(
+    account_number: "account number", 
+    date_since: '2016-10-25', 
+    date_to: '2016-10-30', 
+    credentials: 'bank_1'
+);
 
-$bank_1_accounts = $api->GetAccountsList('bank_1');
-$bank_1_transactions = $api->GetAccountHistory("account number", '2016-10-25', '2016-10-30', 'bank_1');
 
-$bank_2_accounts = $api->GetAccountsList('bank_2');
-$bank_2_transactions = $api->GetAccountHistory("account number", '2016-10-25', '2016-10-30', 'bank_2');
+$bank_2_accounts = $api->GetAccountsList(
+    credentials: 'bank_2'
+);
+
+$bank_2_transactions = $api->GetAccountHistory(
+    account_number: "account number", 
+    date_since: '2016-10-25', 
+    date_to: '2016-10-30', 
+    credentials: 'bank_2'
+);
 ```
 
 ## Credits
