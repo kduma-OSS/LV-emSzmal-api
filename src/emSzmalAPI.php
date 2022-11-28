@@ -2,57 +2,35 @@
 
 namespace KDuma\emSzmalAPI;
 
-use DateTime;
+use DateTimeImmutable;
 use Exception;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
 use KDuma\emSzmalAPI\CacheProviders\CacheProviderInterface;
+use KDuma\emSzmalAPI\DTO\Account;
+use KDuma\emSzmalAPI\DTO\BankCredentials;
+use KDuma\emSzmalAPI\DTO\MoneyAmount;
+use KDuma\emSzmalAPI\DTO\Transaction;
 
 /**
  * Class emSzmalAPI.
  */
 class emSzmalAPI
 {
-    /**
-     * @var Client
-     */
-    protected $client;
-
-    /**
-     * @var string
-     */
-    private $api_id;
-
-    /**
-     * @var string
-     */
-    private $api_key;
-
-    /**
-     * @var string|null
-     */
-    private $session_id;
-
-    /**
-     * @var CacheProviderInterface|null
-     */
-    protected $cache_provider = null;
+    protected readonly Client $client;
+    private ?string $session_id;
+    protected ?CacheProviderInterface $cache_provider = null;
 
     /**
      * @var callable|null
      */
     protected $default_bank_credentials_resolver = null;
 
-    /**
-     * emSzmalAPI constructor.
-     *
-     * @param string $api_id
-     * @param string $api_key
-     * @param int $timeout
-     */
-    public function __construct($api_id, $api_key, $timeout = 120)
+    public function __construct(
+        public readonly string $api_id,
+        public readonly string $api_key, 
+        int                    $timeout = 120)
     {
-        $this->api_id = $api_id;
-        $this->api_key = $api_key;
         $this->client = new Client([
             'base_uri' => 'https://web.emszmal.pl/',
             'timeout'  => $timeout,
@@ -61,7 +39,7 @@ class emSzmalAPI
     }
 
     /**
-     * emSzmalAPI destructor.
+     * @throws GuzzleException
      */
     public function __destruct()
     {
@@ -69,9 +47,9 @@ class emSzmalAPI
     }
 
     /**
-     * @return string
+     * @throws GuzzleException
      */
-    public function SayHello()
+    public function SayHello(): string
     {
         if ($this->session_id) {
             return $this->session_id;
@@ -92,15 +70,14 @@ class emSzmalAPI
     }
 
     /**
-     * @param BankCredentials|string|null $credentials
-     *
      * @return Account[]
+     * @throws Exception|GuzzleException
      */
-    public function GetAccountsList($credentials = null)
+    public function GetAccountsList(string|BankCredentials $credentials = null): array
     {
         $credentials = $this->GetCredentials($credentials);
 
-        $cache_key = 'GetAccountsList.'.$credentials->getProvider().'.'.$credentials->getLogin();
+        $cache_key = 'GetAccountsList.'.$credentials->provider.'.'.$credentials->login;
         $data = $this->cache($cache_key, function () use ($credentials) {
             if (! $this->session_id) {
                 $this->SayHello();
@@ -125,8 +102,8 @@ class emSzmalAPI
             $accounts[] = new Account(
                 $account['AccountNumber'],
                 $account['AccountCurrency'],
-                $account['AccountAvailableFunds'],
-                $account['AccountBalance']
+                MoneyAmount::fromFloat($account['AccountAvailableFunds']),
+                MoneyAmount::fromFloat($account['AccountBalance'])
             );
         }
 
@@ -134,26 +111,27 @@ class emSzmalAPI
     }
 
     /**
-     * @param string                      $account_number
-     * @param DateTime|string             $date_since
-     * @param DateTime|string             $date_to
-     * @param BankCredentials|string|null $credentials
-     *
      * @return Transaction[]
+     * @throws Exception|GuzzleException
      */
-    public function GetAccountHistory($account_number, $date_since, $date_to, $credentials = null)
+    public function GetAccountHistory(
+        string $account_number, 
+        DateTimeImmutable|string $date_since, 
+        DateTimeImmutable|string $date_to, 
+        string|BankCredentials $credentials = null
+    ): array
     {
         $credentials = $this->GetCredentials($credentials);
 
-        if (! $date_since instanceof DateTime) {
-            $date_since = new DateTime($date_since);
+        if (! $date_since instanceof DateTimeImmutable) {
+            $date_since = new DateTimeImmutable($date_since);
         }
 
-        if (! $date_to instanceof DateTime) {
-            $date_to = new DateTime($date_to);
+        if (! $date_to instanceof DateTimeImmutable) {
+            $date_to = new DateTimeImmutable($date_to);
         }
 
-        $cache_key = 'GetAccountHistory.'.$credentials->getProvider().'.'.$credentials->getLogin().'.'.$account_number.'.'.$date_since->format('Y-m-d').'.'.$date_to->format('Y-m-d');
+        $cache_key = 'GetAccountHistory.'.$credentials->provider.'.'.$credentials->login.'.'.$account_number.'.'.$date_since->format('Y-m-d').'.'.$date_to->format('Y-m-d');
         $data = $this->cache($cache_key, function () use ($account_number, $date_since, $date_to, $credentials) {
             if (! $this->session_id) {
                 $this->SayHello();
@@ -182,10 +160,10 @@ class emSzmalAPI
         foreach ($data['Transactions'] as $transaction) {
             $transactions[] = new Transaction(
                 $transaction['TransactionRefNumber'],
-                new DateTime($transaction['TransactionOperationDate']),
-                new DateTime($transaction['TransactionBookingDate']),
-                $transaction['TransactionAmount'],
-                $transaction['TransactionBalance'],
+                new DateTimeImmutable($transaction['TransactionOperationDate']),
+                new DateTimeImmutable($transaction['TransactionBookingDate']),
+                MoneyAmount::fromFloat($transaction['TransactionAmount']),
+                MoneyAmount::fromFloat($transaction['TransactionBalance']),
                 $transaction['TransactionType'],
                 $transaction['TransactionDescription'],
                 $transaction['TransactionPartnerName'],
@@ -198,9 +176,9 @@ class emSzmalAPI
     }
 
     /**
-     * @return bool
+     * @throws GuzzleException
      */
-    public function SayBye()
+    public function SayBye(): bool
     {
         if (! $this->session_id) {
             return false;
@@ -220,14 +198,8 @@ class emSzmalAPI
 
         return true;
     }
-
-    /**
-     * @param string   $cache_key
-     * @param callable $callable
-     *
-     * @return array
-     */
-    private function cache($cache_key, callable $callable)
+    
+    private function cache(string $cache_key, callable $callable): array
     {
         if (! $this->cache_provider) {
             return $callable();
@@ -235,25 +207,15 @@ class emSzmalAPI
 
         return $this->cache_provider->cache($cache_key, $callable);
     }
-
-    /**
-     * @param CacheProviderInterface|null $cache_provider
-     *
-     * @return emSzmalAPI
-     */
-    public function setCacheProvider(CacheProviderInterface $cache_provider = null)
+    
+    public function setCacheProvider(CacheProviderInterface $cache_provider = null): static
     {
         $this->cache_provider = $cache_provider;
 
         return $this;
     }
-
-    /**
-     * @param callable|null $default_bank_credentials_resolver
-     *
-     * @return emSzmalAPI
-     */
-    public function setDefaultBankCredentialsResolver(callable $default_bank_credentials_resolver = null)
+    
+    public function setDefaultBankCredentialsResolver(callable $default_bank_credentials_resolver = null): static
     {
         $this->default_bank_credentials_resolver = $default_bank_credentials_resolver;
 
@@ -261,12 +223,9 @@ class emSzmalAPI
     }
 
     /**
-     * @param BankCredentials|string|null $credentials
-     *
-     * @return BankCredentials
      * @throws Exception
      */
-    protected function GetCredentials($credentials = null)
+    protected function GetCredentials(string|BankCredentials $credentials = null): BankCredentials
     {
         if ($credentials instanceof BankCredentials) {
             return $credentials;

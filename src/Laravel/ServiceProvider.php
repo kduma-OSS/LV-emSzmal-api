@@ -4,39 +4,22 @@ namespace KDuma\emSzmalAPI\Laravel;
 
 use Exception;
 use KDuma\emSzmalAPI\emSzmalAPI;
-use KDuma\emSzmalAPI\BankCredentials;
+use KDuma\emSzmalAPI\DTO\BankCredentials;
 use Illuminate\Contracts\Foundation\Application;
 use KDuma\emSzmalAPI\CacheProviders\LaravelCacheProvider;
 use KDuma\emSzmalAPI\CacheProviders\CacheProviderInterface;
 use Illuminate\Support\ServiceProvider as LaravelServiceProvider;
 
-/**
- * Class ServiceProvider.
- */
+
 class ServiceProvider extends LaravelServiceProvider
 {
-    /**
-     * Indicates if loading of the provider is deferred.
-     *
-     * @var bool
-     */
     protected $defer = true;
-
-    /**
-     * Bootstrap the application events.
-     *
-     * @return void
-     */
+    
     public function boot()
     {
         $this->handleConfigs();
     }
-
-    /**
-     * Register the service provider.
-     *
-     * @return void
-     */
+    
     public function register()
     {
         $this->app->singleton(CacheProviderInterface::class, function (Application $app) {
@@ -63,12 +46,7 @@ class ServiceProvider extends LaravelServiceProvider
             return $api;
         });
     }
-
-    /**
-     * Get the services provided by the provider.
-     *
-     * @return array
-     */
+    
     public function provides()
     {
         return [CacheProviderInterface::class, emSzmalAPI::class];

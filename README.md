@@ -21,7 +21,7 @@ $ composer require kduma/emszmal-api
 ``` php
 $api = new \KDuma\emSzmalAPI\emSzmalAPI($api_id, $api_key);
 
-$BankCredentials = new BankCredentials(\KDuma\emSzmalAPI\Bank::PKOiPKO, "Login", "Password");
+$BankCredentials = new BankCredentials(\KDuma\emSzmalAPI\Enums\Bank::PKOiPKO, "Login", "Password");
 
 $accounts = $api->GetAccountsList($BankCredentials);
 $transactions = $api->GetAccountHistory("account number", '2016-10-25', '2016-10-30', $BankCredentials);
