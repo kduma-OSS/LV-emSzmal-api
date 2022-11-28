@@ -37,11 +37,11 @@ class ServiceProvider extends LaravelServiceProvider
                 }
 
                 return new BankCredentials(
-                    config('emszmalapi.bank_credentials.'.$identifier.'.provider'),
-                    config('emszmalapi.bank_credentials.'.$identifier.'.login'),
-                    config('emszmalapi.bank_credentials.'.$identifier.'.password'),
-                    config('emszmalapi.bank_credentials.'.$identifier.'.user_context'),
-                    config('emszmalapi.bank_credentials.'.$identifier.'.token_value')
+                    config('emszmalapi.bank_credentials.'.$identifier.'.provider') ?? '',
+                    config('emszmalapi.bank_credentials.'.$identifier.'.login') ?? '',
+                    config('emszmalapi.bank_credentials.'.$identifier.'.password') ?? '',
+                    config('emszmalapi.bank_credentials.'.$identifier.'.user_context') ?? '',
+                    config('emszmalapi.bank_credentials.'.$identifier.'.token_value') ?? ''
                 );
             });
 
