@@ -80,12 +80,14 @@ In Your `config/emszmalapi.php` file, in `bank_credentials` section add addition
         'login' => env('EMSZMAL_BANK_1_LOGIN'),
         'password' => env('EMSZMAL_BANK_1_PASSWORD'),
         'user_context' => env('EMSZMAL_BANK_1_USER_CONTEXT', "I"),
+        'token_value' => env('EMSZMAL_BANK_1_USER_TOKEN', ''),
     ],
     'bank_2' => [
         'provider' => env('EMSZMAL_BANK_2_PROVIDER_ID'),
         'login' => env('EMSZMAL_BANK_2_LOGIN'),
         'password' => env('EMSZMAL_BANK_2_PASSWORD'),
         'user_context' => env('EMSZMAL_BANK_2_USER_CONTEXT', "I"),
+        'token_value' => env('EMSZMAL_BANK_2_USER_TOKEN', ''),
     ],
 ],
 ```
