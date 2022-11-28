@@ -28,6 +28,11 @@ class BankCredentials
     protected $user_context;
 
     /**
+     * @var string
+     */
+    protected $token_value;
+
+    /**
      * BankCredentials constructor.
      *
      * @param int    $provider
