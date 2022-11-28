@@ -39,6 +39,7 @@ class BankCredentials
      * @param string $login
      * @param string $password
      * @param string $user_context
+     * @param string $token_value
      */
     public function __construct($provider, $login, $password, $user_context = '', $token_value = '')
     {
