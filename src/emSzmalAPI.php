@@ -80,8 +80,8 @@ class emSzmalAPI
         $credentials = $this->GetCredentials($credentials);
 
         $cache_key = 'GetAccountsList.'.$credentials->provider.'.'.$credentials->login;
-        $data = $this->cache($cache_key, function () use ($credentials) {
-            if (! $this->session_id) {
+        $data = $this->cache_provider->cache($cache_key, function () use ($credentials) {
+            if (!$this->session_id) {
                 $this->SayHello();
             }
 
@@ -134,8 +134,8 @@ class emSzmalAPI
         }
 
         $cache_key = 'GetAccountHistory.'.$credentials->provider.'.'.$credentials->login.'.'.$account_number.'.'.$date_since->format('Y-m-d').'.'.$date_to->format('Y-m-d');
-        $data = $this->cache($cache_key, function () use ($account_number, $date_since, $date_to, $credentials) {
-            if (! $this->session_id) {
+        $data = $this->cache_provider->cache($cache_key, function () use ($account_number, $date_since, $date_to, $credentials) {
+            if (!$this->session_id) {
                 $this->SayHello();
             }
 
@@ -200,12 +200,7 @@ class emSzmalAPI
 
         return true;
     }
-    
-    private function cache(string $cache_key, callable $callable): array
-    {
-        return $this->cache_provider->cache($cache_key, $callable);
-    }
-    
+
     public function setDefaultBankCredentialsResolver(callable $default_bank_credentials_resolver = null): static
     {
         $this->default_bank_credentials_resolver = $default_bank_credentials_resolver;
