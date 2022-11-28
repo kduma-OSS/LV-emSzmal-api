@@ -20,7 +20,8 @@ $ composer require kduma/emszmal-api
 $api = new \KDuma\emSzmalAPI\emSzmalAPI(
     api_id: $api_id, 
     api_key: $api_key,
-    timeout: 120
+    timeout: 120,
+    cache_provider: new \KDuma\emSzmalAPI\CacheProviders\NoCacheProvider(),
 );
 
 $BankCredentials = new \KDuma\emSzmalAPI\DTO\BankCredentials(
@@ -28,18 +29,18 @@ $BankCredentials = new \KDuma\emSzmalAPI\DTO\BankCredentials(
     login: 'Login', 
     password: 'Password',
     user_context: '',
-    token_value: ''
+    token_value: '',
 );
 
 $accounts = $api->GetAccountsList(
-    credentials: $BankCredentials
+    credentials: $BankCredentials,
 );
 
 $transactions = $api->GetAccountHistory(
     account_number: "account number", 
     date_since: '2016-10-25', 
     date_to: '2016-10-30', 
-    credentials: $BankCredentials
+    credentials: $BankCredentials,
 );
 ```
 
@@ -68,7 +69,7 @@ $accounts = $api->GetAccountsList();
 $transactions = $api->GetAccountHistory(
     account_number: 'account number', 
     date_since: '2016-10-25', 
-    date_to: '2016-10-30'
+    date_to: '2016-10-30',
 );
 ```
 
@@ -81,7 +82,7 @@ Route::get('/api', function (\KDuma\emSzmalAPI\emSzmalAPI $api) {
     $transactions = $api->GetAccountHistory(
         account_number: 'account number', 
         date_since: '2016-10-25', 
-        date_to: '2016-10-30'
+        date_to: '2016-10-30',
     );
 });
 ```
@@ -117,25 +118,25 @@ Now you can use the alias when calling API methods:
 $api = app(\KDuma\emSzmalAPI\emSzmalAPI::class);
 
 $bank_1_accounts = $api->GetAccountsList(
-    credentials: 'bank_1'
+    credentials: 'bank_1',
 );
 $bank_1_transactions = $api->GetAccountHistory(
     account_number: "account number", 
     date_since: '2016-10-25', 
     date_to: '2016-10-30', 
-    credentials: 'bank_1'
+    credentials: 'bank_1',
 );
 
 
 $bank_2_accounts = $api->GetAccountsList(
-    credentials: 'bank_2'
+    credentials: 'bank_2',
 );
 
 $bank_2_transactions = $api->GetAccountHistory(
     account_number: "account number", 
     date_since: '2016-10-25', 
     date_to: '2016-10-30', 
-    credentials: 'bank_2'
+    credentials: 'bank_2',
 );
 ```
 
