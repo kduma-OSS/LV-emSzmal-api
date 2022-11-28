@@ -19,7 +19,7 @@ use KDuma\emSzmalAPI\DTO\Transaction;
 class emSzmalAPI
 {
     protected readonly Client $client;
-    private ?string $session_id;
+    private ?string $session_id = null;
 
     /**
      * @var callable|null
