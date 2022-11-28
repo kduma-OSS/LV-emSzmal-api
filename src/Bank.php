@@ -67,4 +67,8 @@ class Bank
     const BGK24Biznes = 61;
     const BankBPS = 62;
     const PBSBank24 = 63;
+    
+    const INGBusiness = 65;
+    
+    const NestBank = 73;
 }

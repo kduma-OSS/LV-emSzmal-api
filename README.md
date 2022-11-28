@@ -43,6 +43,7 @@ Add following entries to your `.env` file:
 	EMSZMAL_BANK_PROVIDER_ID=<provider ID>
 	EMSZMAL_BANK_LOGIN=<login>
 	EMSZMAL_BANK_PASSWORD=<password>
+    EMSZMAL_BANK_USER_TOKEN=<token_from_bank>
     
 ### Usage
 You can resolve `emSzmalAPI::class` class:

@@ -15,6 +15,7 @@ return [
             'login' => env('EMSZMAL_BANK_LOGIN'),
             'password' => env('EMSZMAL_BANK_PASSWORD'),
             'user_context' => env('EMSZMAL_BANK_USER_CONTEXT', 'I'),
+            'token_value' => env('EMSZMAL_BANK_USER_TOKEN', '')
         ],
     ],
 ];
