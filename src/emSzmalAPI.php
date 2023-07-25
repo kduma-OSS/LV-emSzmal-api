@@ -76,6 +76,7 @@ class emSzmalAPI
                         'APIKey' => $this->api_key,
                     ],
                 ],
+            'cookies' => $session->toCookieJar()
         ]);
 
         $response = json_decode($response->getBody(), true);
@@ -104,6 +105,7 @@ class emSzmalAPI
                     ],
                     'AuthenticationCode' => $AuthenticationCode,
                 ],
+            'cookies' => $session->toCookieJar()
         ]);
 
         $response = json_decode($response->getBody(), true);
@@ -128,6 +130,7 @@ class emSzmalAPI
                         'APIKey' => $this->api_key,
                     ],
                 ],
+                'cookies' => $session->toCookieJar()
             ]);
 
             return json_decode($response->getBody(), true);
@@ -184,6 +187,7 @@ class emSzmalAPI
                         'APIKey' => $this->api_key,
                     ],
                 ],
+                'cookies' => $session->toCookieJar()
             ]);
 
             return json_decode($response->getBody(), true);
@@ -222,6 +226,7 @@ class emSzmalAPI
                     'APIKey' => $this->api_key,
                 ],
             ],
+            'cookies' => $session->toCookieJar()
         ]);
 
         return true;
