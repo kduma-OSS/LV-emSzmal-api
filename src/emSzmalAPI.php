@@ -68,7 +68,7 @@ class emSzmalAPI
     {
         $credentials = $this->GetCredentials($credentials);
 
-        $response = $this->client->post('/SessionManager/GetSecondPhaseAuthenticationData', [
+        $response = $this->client->post('/api/SessionManager/GetSecondPhaseAuthenticationData', [
             'json' => $credentials->toArray() + [
                     'SessionId' => $session->id,
                     'License' => [
@@ -96,7 +96,7 @@ class emSzmalAPI
     {
         $credentials = $this->GetCredentials($credentials);
 
-        $response = $this->client->post('/SessionManager/DoSecondPhaseAuthentication', [
+        $response = $this->client->post('/api/SessionManager/DoSecondPhaseAuthentication', [
             'json' => $credentials->toArray() + [
                     'SessionId' => $session->id,
                     'License' => [
