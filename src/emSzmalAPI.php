@@ -10,6 +10,7 @@ use KDuma\emSzmalAPI\CacheProviders\CacheProviderInterface;
 use KDuma\emSzmalAPI\CacheProviders\NoCacheProvider;
 use KDuma\emSzmalAPI\DTO\Account;
 use KDuma\emSzmalAPI\DTO\BankCredentials;
+use KDuma\emSzmalAPI\DTO\Session;
 use KDuma\emSzmalAPI\Values\Money;
 use KDuma\emSzmalAPI\DTO\Transaction;
 
@@ -43,20 +44,8 @@ class emSzmalAPI
     /**
      * @throws GuzzleException
      */
-    public function __destruct()
+    public function SayHello(): Session
     {
-        $this->SayBye();
-    }
-
-    /**
-     * @throws GuzzleException
-     */
-    public function SayHello(): string
-    {
-        if ($this->session_id) {
-            return $this->session_id;
-        }
-
         $response = $this->client->post('/api/Common/SayHello', [
             'json' => [
                 'License' => [
@@ -68,26 +57,22 @@ class emSzmalAPI
 
         $data = json_decode($response->getBody(), true);
 
-        return $this->session_id = $data['SessionId'];
+        return new Session(id: $data['SessionId']);
     }
 
     /**
      * @return Account[]
      * @throws Exception|GuzzleException
      */
-    public function GetAccountsList(string|BankCredentials $credentials = null): array
+    public function GetAccountsList(Session $session, string|BankCredentials $credentials = null): array
     {
         $credentials = $this->GetCredentials($credentials);
 
         $cache_key = 'GetAccountsList.'.$credentials->provider.'.'.$credentials->login;
-        $data = $this->cache_provider->cache($cache_key, function () use ($credentials) {
-            if (!$this->session_id) {
-                $this->SayHello();
-            }
-
+        $data = $this->cache_provider->cache($cache_key, function () use ($credentials, $session) {
             $response = $this->client->post('/api/Accounts/GetAccountsList', [
                 'json' => $credentials->toArray() + [
-                    'SessionId' => $this->session_id,
+                    'SessionId' => $session->id,
                     'License' => [
                         'APIId' => $this->api_id,
                         'APIKey' => $this->api_key,
@@ -117,6 +102,7 @@ class emSzmalAPI
      * @throws Exception|GuzzleException
      */
     public function GetAccountHistory(
+        Session $session,
         string $account_number, 
         DateTimeImmutable|string $date_since, 
         DateTimeImmutable|string $date_to, 
@@ -134,14 +120,10 @@ class emSzmalAPI
         }
 
         $cache_key = 'GetAccountHistory.'.$credentials->provider.'.'.$credentials->login.'.'.$account_number.'.'.$date_since->format('Y-m-d').'.'.$date_to->format('Y-m-d');
-        $data = $this->cache_provider->cache($cache_key, function () use ($account_number, $date_since, $date_to, $credentials) {
-            if (!$this->session_id) {
-                $this->SayHello();
-            }
-
+        $data = $this->cache_provider->cache($cache_key, function () use ($account_number, $date_since, $date_to, $credentials, $session) {
             $response = $this->client->post('/api/Accounts/GetAccountHistory', [
                 'json' => $credentials->toArray() + [
-                    'SessionId' => $this->session_id,
+                    'SessionId' => $session->id,
                     'Data' => [
                         'AccountNumber' => $account_number,
                         'DateSince' => $date_since->format('Y-m-d'),
@@ -180,23 +162,17 @@ class emSzmalAPI
     /**
      * @throws GuzzleException
      */
-    public function SayBye(): bool
+    public function SayBye(Session $session): bool
     {
-        if (! $this->session_id) {
-            return false;
-        }
-
         $this->client->post('/api/Common/SayBye', [
             'json' => [
-                'SessionId' => $this->session_id,
+                'SessionId' => $session->id,
                 'License' => [
                     'APIId' => $this->api_id,
                     'APIKey' => $this->api_key,
                 ],
             ],
         ]);
-
-        $this->session_id = null;
 
         return true;
     }

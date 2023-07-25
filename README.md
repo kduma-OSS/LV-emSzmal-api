@@ -24,7 +24,10 @@ $api = new \KDuma\emSzmalAPI\emSzmalAPI(
     cache_provider: new \KDuma\emSzmalAPI\CacheProviders\NoCacheProvider(),
 );
 
+$session = $api->SayHello();
+
 $BankCredentials = new \KDuma\emSzmalAPI\DTO\BankCredentials(
+    session: $session,
     provider: \KDuma\emSzmalAPI\Enums\Bank::PKOiPKO, 
     login: 'Login', 
     password: 'Password',
@@ -33,14 +36,20 @@ $BankCredentials = new \KDuma\emSzmalAPI\DTO\BankCredentials(
 );
 
 $accounts = $api->GetAccountsList(
+    session: $session,
     credentials: $BankCredentials,
 );
 
 $transactions = $api->GetAccountHistory(
+    session: $session,
     account_number: "account number", 
     date_since: '2016-10-25', 
     date_to: '2016-10-30', 
     credentials: $BankCredentials,
+);
+
+$api->SayBye(
+    session: $session,
 );
 ```
 
@@ -64,12 +73,21 @@ You can resolve `emSzmalAPI::class` class:
 ```php
 $api = app(\KDuma\emSzmalAPI\emSzmalAPI::class);
 
-$accounts = $api->GetAccountsList();
+$session = $api->SayHello();
+
+$accounts = $api->GetAccountsList(
+    session: $session,
+);
 
 $transactions = $api->GetAccountHistory(
+    session: $session,
     account_number: 'account number', 
     date_since: '2016-10-25', 
     date_to: '2016-10-30',
+);
+
+$api->SayBye(
+    session: $session,
 );
 ```
 
@@ -77,12 +95,21 @@ or You can use injection container
 
 ```php
 Route::get('/api', function (\KDuma\emSzmalAPI\emSzmalAPI $api) {
-    $accounts = $api->GetAccountsList();
+    $session = $api->SayHello();
+
+    $accounts = $api->GetAccountsList(
+        session: $session,
+    );
     
     $transactions = $api->GetAccountHistory(
+        session: $session,
         account_number: 'account number', 
         date_since: '2016-10-25', 
         date_to: '2016-10-30',
+    );
+
+    $api->SayBye(
+        session: $session,
     );
 });
 ```
@@ -117,10 +144,14 @@ Now you can use the alias when calling API methods:
 ```php
 $api = app(\KDuma\emSzmalAPI\emSzmalAPI::class);
 
+$session = $api->SayHello();
+
 $bank_1_accounts = $api->GetAccountsList(
+    session: $session,
     credentials: 'bank_1',
 );
 $bank_1_transactions = $api->GetAccountHistory(
+    session: $session,
     account_number: "account number", 
     date_since: '2016-10-25', 
     date_to: '2016-10-30', 
@@ -129,14 +160,20 @@ $bank_1_transactions = $api->GetAccountHistory(
 
 
 $bank_2_accounts = $api->GetAccountsList(
+    session: $session,
     credentials: 'bank_2',
 );
 
 $bank_2_transactions = $api->GetAccountHistory(
+    session: $session,
     account_number: "account number", 
     date_since: '2016-10-25', 
     date_to: '2016-10-30', 
     credentials: 'bank_2',
+);
+
+$api->SayBye(
+    session: $session,
 );
 ```
 
