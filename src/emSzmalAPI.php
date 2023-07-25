@@ -80,7 +80,6 @@ class emSzmalAPI
         ]);
 
         $response = json_decode($response->getBody(), true);
-        var_dump($response);
 
         return new SecondPhaseAuthenticationData(
             AuthenticationMethod: $response['AuthenticationMethod'],
@@ -92,7 +91,7 @@ class emSzmalAPI
     /**
      * @throws Exception|GuzzleException
      */
-    public function DoSecondPhaseAuthentication(Session $session, string $AuthenticationCode, string|BankCredentials $credentials = null)
+    public function DoSecondPhaseAuthentication(Session $session, string $AuthenticationCode, string|BankCredentials $credentials = null): void
     {
         $credentials = $this->GetCredentials($credentials);
 
@@ -107,9 +106,6 @@ class emSzmalAPI
                 ],
             'cookies' => $session->toCookieJar()
         ]);
-
-        $response = json_decode($response->getBody(), true);
-        var_dump($response);
     }
 
     /**
