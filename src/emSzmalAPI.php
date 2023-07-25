@@ -10,6 +10,7 @@ use KDuma\emSzmalAPI\CacheProviders\CacheProviderInterface;
 use KDuma\emSzmalAPI\CacheProviders\NoCacheProvider;
 use KDuma\emSzmalAPI\DTO\Account;
 use KDuma\emSzmalAPI\DTO\BankCredentials;
+use KDuma\emSzmalAPI\DTO\SecondPhaseAuthenticationData;
 use KDuma\emSzmalAPI\DTO\Session;
 use KDuma\emSzmalAPI\Values\Money;
 use KDuma\emSzmalAPI\DTO\Transaction;
@@ -58,6 +59,55 @@ class emSzmalAPI
         $data = json_decode($response->getBody(), true);
 
         return new Session(id: $data['SessionId']);
+    }
+
+    /**
+     * @throws Exception|GuzzleException
+     */
+    public function GetSecondPhaseAuthenticationData(Session $session, string|BankCredentials $credentials = null): SecondPhaseAuthenticationData
+    {
+        $credentials = $this->GetCredentials($credentials);
+
+        $response = $this->client->post('/SessionManager/GetSecondPhaseAuthenticationData', [
+            'json' => $credentials->toArray() + [
+                    'SessionId' => $session->id,
+                    'License' => [
+                        'APIId' => $this->api_id,
+                        'APIKey' => $this->api_key,
+                    ],
+                ],
+        ]);
+
+        $response = json_decode($response->getBody(), true);
+        var_dump($response);
+
+        return new SecondPhaseAuthenticationData(
+            AuthenticationMethod: $response['AuthenticationMethod'],
+            PreAuthenticationCode: $response['PreAuthenticationCode'],
+            AuthenticationCodeHint: $response['AuthenticationCodeHint'],
+        );
+    }
+
+    /**
+     * @throws Exception|GuzzleException
+     */
+    public function DoSecondPhaseAuthentication(Session $session, string $AuthenticationCode, string|BankCredentials $credentials = null)
+    {
+        $credentials = $this->GetCredentials($credentials);
+
+        $response = $this->client->post('/SessionManager/DoSecondPhaseAuthentication', [
+            'json' => $credentials->toArray() + [
+                    'SessionId' => $session->id,
+                    'License' => [
+                        'APIId' => $this->api_id,
+                        'APIKey' => $this->api_key,
+                    ],
+                    'AuthenticationCode' => $AuthenticationCode,
+                ],
+        ]);
+
+        $response = json_decode($response->getBody(), true);
+        var_dump($response);
     }
 
     /**
