@@ -27,7 +27,6 @@ $api = new \KDuma\emSzmalAPI\emSzmalAPI(
 $session = $api->SayHello();
 
 $BankCredentials = new \KDuma\emSzmalAPI\DTO\BankCredentials(
-    session: $session,
     provider: \KDuma\emSzmalAPI\Enums\Bank::PKOiPKO, 
     login: 'Login', 
     password: 'Password',
