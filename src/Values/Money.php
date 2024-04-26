@@ -11,7 +11,7 @@ class Money
     
     public static function fromFloat(float $amount, int $decimals = 2): static
     {
-        return new static((int) ($amount * 10 ** $decimals), $decimals);
+        return new static(round($amount * 10 ** $decimals), $decimals);
     }
     
     public function __toString(): string
