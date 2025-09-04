@@ -6,6 +6,8 @@
 
 emSzmal Banking API wrapper in PHP
 
+Check full documentation here: [opensource.duma.sh/libraries/php/emszmal](https://opensource.duma.sh/libraries/php/emszmal)
+
 ## Install
 
 Via Composer
