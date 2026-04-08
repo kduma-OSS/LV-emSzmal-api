@@ -8,14 +8,14 @@ use Exception;
 use KDuma\emSzmalAPI\emSzmalAPI;
 use KDuma\emSzmalAPI\DTO\BankCredentials;
 use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\Support\DeferrableProvider;
 use KDuma\emSzmalAPI\CacheProviders\LaravelCacheProvider;
 use KDuma\emSzmalAPI\CacheProviders\CacheProviderInterface;
 use Illuminate\Support\ServiceProvider as LaravelServiceProvider;
 
 
-class ServiceProvider extends LaravelServiceProvider
+class ServiceProvider extends LaravelServiceProvider implements DeferrableProvider
 {
-    protected $defer = true;
     
     public function boot()
     {
