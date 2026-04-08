@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace KDuma\emSzmalAPI\Laravel;
 
-use Exception;
 use KDuma\emSzmalAPI\emSzmalAPI;
 use KDuma\emSzmalAPI\DTO\BankCredentials;
 use Illuminate\Contracts\Foundation\Application;
@@ -50,35 +49,37 @@ class ServiceProvider extends LaravelServiceProvider implements DeferrableProvid
             );
 
             $api->setDefaultBankCredentialsResolver(function ($identifier = 'default') {
-                if (! config('emszmalapi.bank_credentials.'.$identifier)) {
-                    throw new Exception('There is no credentials with id '.$identifier.'!');
-                }
-
                 $prefix = 'emszmalapi.bank_credentials.'.$identifier;
 
-                $provider = config($prefix.'.provider');
-                if (! is_int($provider) || $provider <= 0) {
+                if (! config($prefix)) {
                     throw new \RuntimeException(
-                        'emSzmal API: bank credentials "'.$identifier.'.provider" must be a positive integer.'
+                        'emSzmal API: '.$prefix.' is not configured.'
+                    );
+                }
+
+                $provider = config($prefix.'.provider');
+                if (! is_numeric($provider) || (int) $provider <= 0) {
+                    throw new \RuntimeException(
+                        'emSzmal API: '.$prefix.'.provider must be a positive integer.'
                     );
                 }
 
                 $login = config($prefix.'.login');
                 if (! is_string($login) || trim($login) === '') {
                     throw new \RuntimeException(
-                        'emSzmal API: bank credentials "'.$identifier.'.login" must be a non-empty string.'
+                        'emSzmal API: '.$prefix.'.login must be a non-empty string.'
                     );
                 }
 
                 $password = config($prefix.'.password');
                 if (! is_string($password) || trim($password) === '') {
                     throw new \RuntimeException(
-                        'emSzmal API: bank credentials "'.$identifier.'.password" must be a non-empty string.'
+                        'emSzmal API: '.$prefix.'.password must be a non-empty string.'
                     );
                 }
 
                 return new BankCredentials(
-                    provider: $provider,
+                    provider: (int) $provider,
                     login: $login,
                     password: $password,
                     user_context: (string) config($prefix.'.user_context', ''),
