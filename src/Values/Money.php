@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace KDuma\emSzmalAPI\Values;
 
 class Money
@@ -12,7 +14,7 @@ class Money
 
     public static function fromFloat(float $amount, int $decimals = 2): static
     {
-        return new static(round($amount * 10 ** $decimals), $decimals);
+        return new static((int) round($amount * (10 ** $decimals)), $decimals);
     }
 
     public function __toString(): string
@@ -22,6 +24,6 @@ class Money
 
     public function toFloat(): float
     {
-        return $this->amount / 10 ** $this->decimals;
+        return $this->amount / (10 ** $this->decimals);
     }
 }

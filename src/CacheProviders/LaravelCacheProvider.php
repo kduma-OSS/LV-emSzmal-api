@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace KDuma\emSzmalAPI\CacheProviders;
 
 use Illuminate\Cache\CacheManager;
@@ -15,9 +17,13 @@ class LaravelCacheProvider implements CacheProviderInterface
     public function cache(string $key, callable $callable): mixed
     {
         if ($this->remember_for) {
-            return $this->cache_manager->remember($key, Carbon::now()->addMinutes($this->remember_for), $callable);
-        } else {
-            return $this->cache_manager->rememberForever($key, $callable);
+            return $this->cache_manager->remember(
+                $key,
+                Carbon::now()->addMinutes($this->remember_for),
+                $callable
+            );
         }
+
+        return $this->cache_manager->rememberForever($key, $callable);
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace KDuma\emSzmalAPI\DTO;
 
 use KDuma\emSzmalAPI\Enums\Bank;
@@ -31,4 +33,5 @@ class BankCredentials
             ],
         ];
     }
+
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace KDuma\emSzmalAPI\DTO;
 
 use GuzzleHttp\Cookie\CookieJar;
@@ -17,8 +19,9 @@ class Session
 
     public function toCookieJar(): CookieJar
     {
-        return CookieJar::fromArray([
-            'SessionId' => $this->id,
-        ], 'web.emszmal.pl');
+        return CookieJar::fromArray(
+            ['SessionId' => $this->id],
+            'web.emszmal.pl'
+        );
     }
 }

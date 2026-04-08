@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace KDuma\emSzmalAPI;
 
 use DateTimeImmutable;
@@ -23,10 +25,7 @@ class emSzmalAPI
     protected readonly Client $client;
     private ?string $session_id = null;
 
-    /**
-     * @var callable|null
-     */
-    protected $default_bank_credentials_resolver = null;
+    protected ?callable $default_bank_credentials_resolver = null;
 
     public function __construct(
         public readonly string $api_id,
@@ -64,7 +63,7 @@ class emSzmalAPI
     /**
      * @throws Exception|GuzzleException
      */
-    public function GetSecondPhaseAuthenticationData(Session $session, string|BankCredentials $credentials = null): SecondPhaseAuthenticationData
+    public function GetSecondPhaseAuthenticationData(Session $session, string|BankCredentials|null $credentials = null): SecondPhaseAuthenticationData
     {
         $credentials = $this->GetCredentials($credentials);
 
@@ -91,7 +90,7 @@ class emSzmalAPI
     /**
      * @throws Exception|GuzzleException
      */
-    public function DoSecondPhaseAuthentication(Session $session, string $AuthenticationCode, string|BankCredentials $credentials = null): void
+    public function DoSecondPhaseAuthentication(Session $session, string $AuthenticationCode, string|BankCredentials|null $credentials = null): void
     {
         $credentials = $this->GetCredentials($credentials);
 
@@ -112,7 +111,7 @@ class emSzmalAPI
      * @return Account[]
      * @throws Exception|GuzzleException
      */
-    public function GetAccountsList(Session $session, string|BankCredentials $credentials = null): array
+    public function GetAccountsList(Session $session, string|BankCredentials|null $credentials = null): array
     {
         $credentials = $this->GetCredentials($credentials);
 
@@ -152,10 +151,10 @@ class emSzmalAPI
      */
     public function GetAccountHistory(
         Session $session,
-        string $account_number, 
-        DateTimeImmutable|string $date_since, 
-        DateTimeImmutable|string $date_to, 
-        string|BankCredentials $credentials = null
+        string $account_number,
+        DateTimeImmutable|string $date_since,
+        DateTimeImmutable|string $date_to,
+        string|BankCredentials|null $credentials = null
     ): array
     {
         $credentials = $this->GetCredentials($credentials);
@@ -228,7 +227,7 @@ class emSzmalAPI
         return true;
     }
 
-    public function setDefaultBankCredentialsResolver(callable $default_bank_credentials_resolver = null): static
+    public function setDefaultBankCredentialsResolver(?callable $default_bank_credentials_resolver = null): static
     {
         $this->default_bank_credentials_resolver = $default_bank_credentials_resolver;
 
@@ -238,7 +237,7 @@ class emSzmalAPI
     /**
      * @throws Exception
      */
-    protected function GetCredentials(string|BankCredentials $credentials = null): BankCredentials
+    protected function GetCredentials(string|BankCredentials|null $credentials = null): BankCredentials
     {
         if ($credentials instanceof BankCredentials) {
             return $credentials;

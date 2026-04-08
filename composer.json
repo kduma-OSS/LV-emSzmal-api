@@ -17,9 +17,13 @@
         }
     ],
     "require": {
-        "php": "~8.1",
-        "guzzlehttp/guzzle": "^7.0",
-        "ext-json": "*"
+        "php": "^8.3",
+        "ext-json": "*",
+        "guzzlehttp/guzzle": "^7.0"
+    },
+    "suggest": {
+        "illuminate/support": "Required for Laravel integration (ServiceProvider, config())",
+        "illuminate/cache": "Required for Laravel cache provider integration"
     },
     "autoload": {
         "psr-4": {
