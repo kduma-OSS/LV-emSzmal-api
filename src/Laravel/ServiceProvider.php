@@ -6,6 +6,7 @@ namespace KDuma\emSzmalAPI\Laravel;
 
 use KDuma\emSzmalAPI\emSzmalAPI;
 use KDuma\emSzmalAPI\DTO\BankCredentials;
+use KDuma\emSzmalAPI\Enums\Bank;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Support\DeferrableProvider;
 use KDuma\emSzmalAPI\CacheProviders\LaravelCacheProvider;
@@ -42,7 +43,10 @@ class ServiceProvider extends LaravelServiceProvider implements DeferrableProvid
             }
 
             $timeout = config('emszmalapi.timeout', 120);
-            if (filter_var($timeout, FILTER_VALIDATE_INT) === false || (int) $timeout <= 0) {
+            if ((! is_int($timeout) && ! is_string($timeout))
+                || filter_var($timeout, FILTER_VALIDATE_INT) === false
+                || (int) $timeout <= 0
+            ) {
                 throw new \RuntimeException(
                     'emSzmal API: emszmalapi.timeout must be a positive integer.'
                 );
@@ -66,9 +70,16 @@ class ServiceProvider extends LaravelServiceProvider implements DeferrableProvid
                 }
 
                 $provider = config($prefix.'.provider');
-                if (filter_var($provider, FILTER_VALIDATE_INT) === false || (int) $provider <= 0) {
+                if ($provider instanceof Bank) {
+                    $providerId = $provider->value;
+                } elseif ((is_int($provider) || is_string($provider))
+                    && filter_var($provider, FILTER_VALIDATE_INT) !== false
+                    && (int) $provider > 0
+                ) {
+                    $providerId = (int) $provider;
+                } else {
                     throw new \RuntimeException(
-                        'emSzmal API: '.$prefix.'.provider must be a positive integer.'
+                        'emSzmal API: '.$prefix.'.provider must be a positive integer or a Bank enum value.'
                     );
                 }
 
@@ -87,11 +98,11 @@ class ServiceProvider extends LaravelServiceProvider implements DeferrableProvid
                 }
 
                 return new BankCredentials(
-                    provider: (int) $provider,
+                    provider: $providerId,
                     login: $login,
                     password: $password,
                     user_context: (string) config($prefix.'.user_context', ''),
-                    token_value: (string) config($prefix.'.token_value', '')
+                    token_value: (string) config($prefix.'.token_value', ''),
                 );
             });
 
