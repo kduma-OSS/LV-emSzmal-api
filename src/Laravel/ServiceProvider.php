@@ -41,24 +41,32 @@ class ServiceProvider extends LaravelServiceProvider implements DeferrableProvid
                 throw new \RuntimeException('emSzmal API: emszmalapi.license.api_key must be a non-empty string.');
             }
 
+            $timeout = config('emszmalapi.timeout', 120);
+            if (filter_var($timeout, FILTER_VALIDATE_INT) === false || (int) $timeout <= 0) {
+                throw new \RuntimeException(
+                    'emSzmal API: emszmalapi.timeout must be a positive integer.'
+                );
+            }
+
             $api = new emSzmalAPI(
                 api_id: $apiId,
                 api_key: $apiKey,
-                timeout: (int) config('emszmalapi.timeout', 120),
+                timeout: (int) $timeout,
                 cache_provider: $app->make(CacheProviderInterface::class),
             );
 
             $api->setDefaultBankCredentialsResolver(function ($identifier = 'default') {
                 $prefix = 'emszmalapi.bank_credentials.'.$identifier;
 
-                if (! config($prefix)) {
+                $credentials = config($prefix);
+                if (! is_array($credentials) || empty($credentials)) {
                     throw new \RuntimeException(
                         'emSzmal API: '.$prefix.' is not configured.'
                     );
                 }
 
                 $provider = config($prefix.'.provider');
-                if (! is_numeric($provider) || (int) $provider <= 0) {
+                if (filter_var($provider, FILTER_VALIDATE_INT) === false || (int) $provider <= 0) {
                     throw new \RuntimeException(
                         'emSzmal API: '.$prefix.'.provider must be a positive integer.'
                     );
