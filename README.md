@@ -8,6 +8,11 @@ emSzmal Banking API wrapper in PHP
 
 Check full documentation here: [opensource.duma.sh/libraries/php/emszmal](https://opensource.duma.sh/libraries/php/emszmal)
 
+## Requirements
+
+- PHP `^8.3`
+- Laravel `^12.0 || ^13.0`
+
 ## Install
 
 Via Composer
