@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace KDuma\emSzmalAPI\Laravel;
 
-use Exception;
 use KDuma\emSzmalAPI\emSzmalAPI;
 use KDuma\emSzmalAPI\DTO\BankCredentials;
+use KDuma\emSzmalAPI\Enums\Bank;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Support\DeferrableProvider;
 use KDuma\emSzmalAPI\CacheProviders\LaravelCacheProvider;
@@ -31,24 +31,78 @@ class ServiceProvider extends LaravelServiceProvider implements DeferrableProvid
         });
 
         $this->app->singleton(emSzmalAPI::class, function (Application $app): emSzmalAPI {
+            $apiId = config('emszmalapi.license.api_id');
+            $apiKey = config('emszmalapi.license.api_key');
+
+            if (! is_string($apiId) || trim($apiId) === '') {
+                throw new \RuntimeException('emSzmal API: emszmalapi.license.api_id must be a non-empty string.');
+            }
+
+            if (! is_string($apiKey) || trim($apiKey) === '') {
+                throw new \RuntimeException('emSzmal API: emszmalapi.license.api_key must be a non-empty string.');
+            }
+
+            $timeout = config('emszmalapi.timeout', 120);
+            if ((! is_int($timeout) && ! is_string($timeout))
+                || filter_var($timeout, FILTER_VALIDATE_INT) === false
+                || (int) $timeout <= 0
+            ) {
+                throw new \RuntimeException(
+                    'emSzmal API: emszmalapi.timeout must be a positive integer.'
+                );
+            }
+
             $api = new emSzmalAPI(
-                api_id: config('emszmalapi.license.api_id'),
-                api_key: config('emszmalapi.license.api_key'),
-                timeout: config('emszmalapi.timeout', 120),
+                api_id: $apiId,
+                api_key: $apiKey,
+                timeout: (int) $timeout,
                 cache_provider: $app->make(CacheProviderInterface::class),
             );
-            
+
             $api->setDefaultBankCredentialsResolver(function ($identifier = 'default') {
-                if (! config('emszmalapi.bank_credentials.'.$identifier)) {
-                    throw new Exception('There is no credentials with id '.$identifier.'!');
+                $prefix = 'emszmalapi.bank_credentials.'.$identifier;
+
+                $credentials = config($prefix);
+                if (! is_array($credentials) || empty($credentials)) {
+                    throw new \RuntimeException(
+                        'emSzmal API: '.$prefix.' is not configured.'
+                    );
+                }
+
+                $provider = config($prefix.'.provider');
+                if ($provider instanceof Bank) {
+                    $providerId = $provider->value;
+                } elseif ((is_int($provider) || is_string($provider))
+                    && filter_var($provider, FILTER_VALIDATE_INT) !== false
+                    && (int) $provider > 0
+                ) {
+                    $providerId = (int) $provider;
+                } else {
+                    throw new \RuntimeException(
+                        'emSzmal API: '.$prefix.'.provider must be a positive integer or a Bank enum value.'
+                    );
+                }
+
+                $login = config($prefix.'.login');
+                if (! is_string($login) || trim($login) === '') {
+                    throw new \RuntimeException(
+                        'emSzmal API: '.$prefix.'.login must be a non-empty string.'
+                    );
+                }
+
+                $password = config($prefix.'.password');
+                if (! is_string($password) || trim($password) === '') {
+                    throw new \RuntimeException(
+                        'emSzmal API: '.$prefix.'.password must be a non-empty string.'
+                    );
                 }
 
                 return new BankCredentials(
-                    provider: config('emszmalapi.bank_credentials.'.$identifier.'.provider') ?? '',
-                    login: config('emszmalapi.bank_credentials.'.$identifier.'.login') ?? '',
-                    password: config('emszmalapi.bank_credentials.'.$identifier.'.password') ?? '',
-                    user_context: config('emszmalapi.bank_credentials.'.$identifier.'.user_context') ?? '',
-                    token_value: config('emszmalapi.bank_credentials.'.$identifier.'.token_value') ?? ''
+                    provider: $providerId,
+                    login: $login,
+                    password: $password,
+                    user_context: (string) config($prefix.'.user_context', ''),
+                    token_value: (string) config($prefix.'.token_value', ''),
                 );
             });
 
