@@ -34,12 +34,12 @@ class ServiceProvider extends LaravelServiceProvider implements DeferrableProvid
             $apiId = config('emszmalapi.license.api_id');
             $apiKey = config('emszmalapi.license.api_key');
 
-            if (empty($apiId) || ! is_string($apiId)) {
-                throw new \RuntimeException('emSzmal API: emszmalapi.license.api_id is not configured.');
+            if (! is_string($apiId) || trim($apiId) === '') {
+                throw new \RuntimeException('emSzmal API: emszmalapi.license.api_id must be a non-empty string.');
             }
 
-            if (empty($apiKey) || ! is_string($apiKey)) {
-                throw new \RuntimeException('emSzmal API: emszmalapi.license.api_key is not configured.');
+            if (! is_string($apiKey) || trim($apiKey) === '') {
+                throw new \RuntimeException('emSzmal API: emszmalapi.license.api_key must be a non-empty string.');
             }
 
             $api = new emSzmalAPI(
@@ -54,12 +54,35 @@ class ServiceProvider extends LaravelServiceProvider implements DeferrableProvid
                     throw new Exception('There is no credentials with id '.$identifier.'!');
                 }
 
+                $prefix = 'emszmalapi.bank_credentials.'.$identifier;
+
+                $provider = config($prefix.'.provider');
+                if (! is_int($provider) || $provider <= 0) {
+                    throw new \RuntimeException(
+                        'emSzmal API: bank credentials "'.$identifier.'.provider" must be a positive integer.'
+                    );
+                }
+
+                $login = config($prefix.'.login');
+                if (! is_string($login) || trim($login) === '') {
+                    throw new \RuntimeException(
+                        'emSzmal API: bank credentials "'.$identifier.'.login" must be a non-empty string.'
+                    );
+                }
+
+                $password = config($prefix.'.password');
+                if (! is_string($password) || trim($password) === '') {
+                    throw new \RuntimeException(
+                        'emSzmal API: bank credentials "'.$identifier.'.password" must be a non-empty string.'
+                    );
+                }
+
                 return new BankCredentials(
-                    provider: (int) config('emszmalapi.bank_credentials.'.$identifier.'.provider', 0),
-                    login: (string) config('emszmalapi.bank_credentials.'.$identifier.'.login', ''),
-                    password: (string) config('emszmalapi.bank_credentials.'.$identifier.'.password', ''),
-                    user_context: (string) config('emszmalapi.bank_credentials.'.$identifier.'.user_context', ''),
-                    token_value: (string) config('emszmalapi.bank_credentials.'.$identifier.'.token_value', '')
+                    provider: $provider,
+                    login: $login,
+                    password: $password,
+                    user_context: (string) config($prefix.'.user_context', ''),
+                    token_value: (string) config($prefix.'.token_value', '')
                 );
             });
 
