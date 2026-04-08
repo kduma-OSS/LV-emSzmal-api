@@ -17,20 +17,20 @@ use Illuminate\Support\ServiceProvider as LaravelServiceProvider;
 class ServiceProvider extends LaravelServiceProvider implements DeferrableProvider
 {
     
-    public function boot()
+    public function boot(): void
     {
         $this->handleConfigs();
     }
-    
-    public function register()
+
+    public function register(): void
     {
-        $this->app->singleton(CacheProviderInterface::class, function (Application $app) {
+        $this->app->singleton(CacheProviderInterface::class, function (Application $app): CacheProviderInterface {
             return $app->make(LaravelCacheProvider::class, [
                 'remember_for' => config('emszmalapi.cache.remember_for'),
             ]);
         });
 
-        $this->app->singleton(emSzmalAPI::class, function (Application $app) {
+        $this->app->singleton(emSzmalAPI::class, function (Application $app): emSzmalAPI {
             $api = new emSzmalAPI(
                 api_id: config('emszmalapi.license.api_id'),
                 api_key: config('emszmalapi.license.api_key'),
@@ -56,12 +56,12 @@ class ServiceProvider extends LaravelServiceProvider implements DeferrableProvid
         });
     }
     
-    public function provides()
+    public function provides(): array
     {
         return [CacheProviderInterface::class, emSzmalAPI::class];
     }
 
-    private function handleConfigs()
+    private function handleConfigs(): void
     {
         $configPath = __DIR__.'/../../config/emszmalapi.php';
 
