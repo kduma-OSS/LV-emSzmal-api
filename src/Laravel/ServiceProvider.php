@@ -31,24 +31,35 @@ class ServiceProvider extends LaravelServiceProvider implements DeferrableProvid
         });
 
         $this->app->singleton(emSzmalAPI::class, function (Application $app): emSzmalAPI {
+            $apiId = config('emszmalapi.license.api_id');
+            $apiKey = config('emszmalapi.license.api_key');
+
+            if (empty($apiId) || ! is_string($apiId)) {
+                throw new \RuntimeException('emSzmal API: emszmalapi.license.api_id is not configured.');
+            }
+
+            if (empty($apiKey) || ! is_string($apiKey)) {
+                throw new \RuntimeException('emSzmal API: emszmalapi.license.api_key is not configured.');
+            }
+
             $api = new emSzmalAPI(
-                api_id: config('emszmalapi.license.api_id'),
-                api_key: config('emszmalapi.license.api_key'),
-                timeout: config('emszmalapi.timeout', 120),
+                api_id: $apiId,
+                api_key: $apiKey,
+                timeout: (int) config('emszmalapi.timeout', 120),
                 cache_provider: $app->make(CacheProviderInterface::class),
             );
-            
+
             $api->setDefaultBankCredentialsResolver(function ($identifier = 'default') {
                 if (! config('emszmalapi.bank_credentials.'.$identifier)) {
                     throw new Exception('There is no credentials with id '.$identifier.'!');
                 }
 
                 return new BankCredentials(
-                    provider: config('emszmalapi.bank_credentials.'.$identifier.'.provider') ?? '',
-                    login: config('emszmalapi.bank_credentials.'.$identifier.'.login') ?? '',
-                    password: config('emszmalapi.bank_credentials.'.$identifier.'.password') ?? '',
-                    user_context: config('emszmalapi.bank_credentials.'.$identifier.'.user_context') ?? '',
-                    token_value: config('emszmalapi.bank_credentials.'.$identifier.'.token_value') ?? ''
+                    provider: (int) config('emszmalapi.bank_credentials.'.$identifier.'.provider', 0),
+                    login: (string) config('emszmalapi.bank_credentials.'.$identifier.'.login', ''),
+                    password: (string) config('emszmalapi.bank_credentials.'.$identifier.'.password', ''),
+                    user_context: (string) config('emszmalapi.bank_credentials.'.$identifier.'.user_context', ''),
+                    token_value: (string) config('emszmalapi.bank_credentials.'.$identifier.'.token_value', '')
                 );
             });
 
