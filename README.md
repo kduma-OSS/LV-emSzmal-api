@@ -1,5 +1,9 @@
 # emSzmal Banking API Wrapper
 
+[![Latest Stable Version](https://poser.pugx.org/kduma/emszmal-api/v/stable.svg)](https://packagist.org/packages/kduma/emszmal-api)
+[![Total Downloads](https://poser.pugx.org/kduma/emszmal-api/downloads.svg)](https://packagist.org/packages/kduma/emszmal-api)
+[![License](https://poser.pugx.org/kduma/emszmal-api/license.svg)](https://packagist.org/packages/kduma/emszmal-api)
+
 PHP wrapper for the [emSzmal](https://emszmal.pl) banking API — enables fetching account data and transaction history from Polish banks.
 
 Full documentation: [opensource.duma.sh/libraries/php/emszmal](https://opensource.duma.sh/libraries/php/emszmal)
